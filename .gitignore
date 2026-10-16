@@ -1,0 +1,28 @@
+# deps / build
+node_modules/
+.next/
+out/
+build/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+
+# env (nunca versionar segredos)
+.env
+.env.local
+.env.*.local
+
+# banco local
+local.db
+local.db-*
+*.db-journal
+
+# sistema / editor
+.DS_Store
+*.log
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# n8n export temporário
+.n8n-export/
