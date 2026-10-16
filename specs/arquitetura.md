@@ -130,7 +130,8 @@ Um único `.env` na raiz, lido pelo Next.js e pelo `docker compose`.
 | `WHATSAPP_PHONE_NUMBER_ID` | n8n | ID do número remetente |
 | `WHATSAPP_BUSINESS_ACCOUNT_ID` | n8n | ID da conta WhatsApp Business |
 | `GEMINI_API_KEY` | n8n | Chave do Google AI Studio |
-| `GEMINI_MODEL` | n8n | Ex.: `gemini-2.5-flash` (o Flash mais recente do free tier) |
+| `GEMINI_MODEL` | n8n | Padrão `gemini-flash-lite-latest` (Flash-Lite atual; maior cota diária no free tier) |
+| `GEMINI_MODEL_RESERVA` | n8n | Modelo usado quando o principal falha (cota própria). Padrão `gemini-3.1-flash-lite` |
 | `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | compose | Banco do n8n |
 | `N8N_ENCRYPTION_KEY` | compose | Chave de criptografia das credenciais do n8n |
 | `NGROK_AUTHTOKEN` / `NGROK_DOMAIN` | compose | Túnel público (profile `tunel`) |

@@ -46,12 +46,13 @@ describe("montarCredenciais (INF-RF-04)", () => {
 });
 
 describe("idsParaPublicar (INF-RF-04)", () => {
-  it("publica workflows com gatilho próprio e ignora sub-workflows", () => {
+  it("publica todo workflow com gatilho, inclusive sub-workflows (n8n 2.x só executa a versão publicada)", () => {
     const wfs = [
       { id: "a", nodes: [{ type: "n8n-nodes-base.webhook" }] },
       { id: "b", nodes: [{ type: "@n8n/n8n-nodes-langchain.chatTrigger" }] },
       { id: "c", nodes: [{ type: "n8n-nodes-base.executeWorkflowTrigger" }, { type: "n8n-nodes-base.httpRequest" }] },
+      { id: "d", nodes: [{ type: "n8n-nodes-base.httpRequest" }] },
     ];
-    expect(idsParaPublicar(wfs)).toEqual(["a", "b"]);
+    expect(idsParaPublicar(wfs)).toEqual(["a", "b", "c"]);
   });
 });

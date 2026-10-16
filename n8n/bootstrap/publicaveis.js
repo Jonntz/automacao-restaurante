@@ -1,16 +1,14 @@
-// Lista os IDs dos workflows que devem ser publicados: os que têm gatilho próprio.
-// Sub-workflows (só "Execute Workflow Trigger") não são publicados (INF-RF-04).
+// Lista os IDs dos workflows que devem ser publicados: todos os que têm algum gatilho.
+// No n8n 2.x isso inclui sub-workflows ("Execute Workflow Trigger"): o nó Execute Workflow
+// só executa a versão publicada (INF-RF-04).
 // Uso: node publicaveis.js /pasta/de/workflows  → imprime um ID por linha
 const fs = require("node:fs");
 const path = require("node:path");
 
-const SO_SUBWORKFLOW = "n8n-nodes-base.executeWorkflowTrigger";
 const ehGatilho = (tipo) => /trigger$/i.test(tipo) || tipo === "n8n-nodes-base.webhook";
 
 function idsParaPublicar(workflows) {
-  return workflows
-    .filter((wf) => (wf.nodes ?? []).some((n) => ehGatilho(n.type) && n.type !== SO_SUBWORKFLOW))
-    .map((wf) => wf.id);
+  return workflows.filter((wf) => (wf.nodes ?? []).some((n) => ehGatilho(n.type))).map((wf) => wf.id);
 }
 
 if (require.main === module) {

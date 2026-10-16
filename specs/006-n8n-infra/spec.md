@@ -10,7 +10,7 @@ Subir n8n + Postgres com um comando, já com credenciais e workflows importados 
 
 ## Requisitos funcionais
 - **INF-RF-01** — `docker-compose.yml` na raiz com estes serviços:
-  - `postgres` (`postgres:16-alpine`), com healthcheck e volume nomeado;
+  - `postgres` (`postgres:17-alpine`), com healthcheck e volume nomeado;
   - `n8n` (`docker.n8n.io/n8nio/n8n:<versão fixada 2.x>`), com volume nomeado, porta **`127.0.0.1:5678:5678`** (nunca exposta na rede) e `extra_hosts: ["host.docker.internal:host-gateway"]`.
 - **INF-RF-02** — Ambiente do n8n:
   - banco: `DB_TYPE=postgresdb` + `DB_POSTGRESDB_*`;
@@ -20,13 +20,13 @@ Subir n8n + Postgres com um comando, já com credenciais e workflows importados 
   - `NEXT_API_URL`, `WHATSAPP_PHONE_NUMBER_ID`, `GEMINI_MODEL`;
   - `N8N_SECURE_COOKIE=false` (UI em http local);
   - `N8N_DIAGNOSTICS_ENABLED=false`, `N8N_PERSONALIZATION_ENABLED=false`;
-  - `WEBHOOK_URL=http://localhost:5678/`.
+  - `N8N_WEBHOOK_URL=http://localhost:5678/` (o `WEBHOOK_URL` foi depreciado no n8n 2.x).
 - **INF-RF-03** — O Postgres serve ao n8n como banco interno **e** à memória de chat (tabela criada pelo nó Postgres Chat Memory).
 - **INF-RF-04** — Serviço one-shot `n8n-bootstrap`, com a mesma imagem e o mesmo ambiente do n8n, que roda **antes** do n8n (`depends_on: condition: service_completed_successfully`):
   1. `node /bootstrap/render-credentials.js` gera `/tmp/credenciais.json` a partir das env vars, com IDs fixos (tabela no plan).
   2. `n8n import:credentials --input=/tmp/credenciais.json`.
   3. `n8n import:workflow --separate --input=/workflows`.
-  4. `n8n publish:workflow --id=<id>` para cada workflow com trigger (o n8n 2.x substituiu "ativar" por "publicar").
+  4. `n8n publish:workflow --id=<id>` para **todos** os workflows com algum gatilho, inclusive sub-workflows com "Execute Workflow Trigger" (o n8n 2.x substituiu "ativar" por "publicar", e o Execute Workflow só chama a versão publicada).
   - É idempotente: rodar de novo sobrescreve pelo mesmo ID.
   - O arquivo temporário de credenciais é apagado ao fim.
   - Se faltar uma variável opcional (ex.: `WHATSAPP_ACCESS_TOKEN`), a credencial é criada com um valor placeholder e um aviso no log, sem falhar.
@@ -68,3 +68,5 @@ Fila do n8n (queue mode), runners externos, backup, HTTPS próprio para o n8n (o
 - 2026-10-16 — versão inicial (n8n 2.x: `publish:workflow` substitui `update:workflow --active`).
 - 2026-10-16 — Versões fixadas: n8n 2.43.4 (a `stable`, 2.43.7, saiu no mesmo dia; segui a mesma cautela de idade mínima do pnpm), `postgres:16-alpine` e `ngrok:3.39.11-alpine`. O bootstrap monta `./n8n` inteiro em `/projeto-n8n`.
 - 2026-10-16 — **Bloqueio de ambiente:** no macOS, o Docker Desktop travou ao iniciar o primeiro container com bind mount de `~/Documents`. Depois disso nenhum container novo iniciava, e nem o próprio Docker fechava. A hipótese é um pedido de permissão do macOS ("Docker quer acessar Documentos") esperando clique na tela. A verificação (T006.03, T006.06, T006.07, T006.10, T006.11) fica pendente até destravar.
+- 2026-10-16 — Docker destravado pelo usuário (permissão do macOS para a pasta Documentos + `docker desktop restart`). Na primeira subida real, o n8n 2.43 avisou que o Postgres 16 está "fora da faixa suportada" e que `WEBHOOK_URL` foi depreciado. Mudamos para `postgres:17-alpine` e `N8N_WEBHOOK_URL`.
+- 2026-10-16 — O primeiro teste real do Chat Teste falhou com `Workflow is not active and cannot be executed`: no n8n 2.x, sub-workflows também precisam ser publicados. Agora o bootstrap publica todo workflow que tem algum gatilho.

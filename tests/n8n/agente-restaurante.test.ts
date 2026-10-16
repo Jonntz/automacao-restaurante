@@ -53,10 +53,19 @@ describe("estrutura do sub-workflow (IA-RF-01…05, IA-RF-07)", () => {
       expect(destinos(wf, tool, "ai_tool")).toEqual([["Atendente"]]);
     }
     expect(acharNo(wf, "Memória").parameters).toMatchObject({ sessionIdType: "customKey", contextWindowLength: 20 });
+    expect(String(acharNo(wf, "Gemini").parameters.modelName)).toContain("gemini-flash-lite-latest");
+    // modelo reserva na entrada "Fallback Model" (índice 1 de ai_languageModel)
+    expect(acharNo(wf, "Atendente").parameters.needsFallback).toBe(true);
+    expect(wf.connections["Gemini reserva"].ai_languageModel).toEqual([[{ node: "Atendente", type: "ai_languageModel", index: 1 }]]);
+    expect(wf.connections["Gemini"].ai_languageModel).toEqual([[{ node: "Atendente", type: "ai_languageModel", index: 0 }]]);
+    expect(String(acharNo(wf, "Gemini reserva").parameters.modelName)).toContain("GEMINI_MODEL_RESERVA");
   });
 
   it("IA-RF-07: erro do agente ou do contexto vai para o Fallback", () => {
-    expect(acharNo(wf, "Atendente").onError).toBe("continueErrorOutput");
+    const atendente = acharNo(wf, "Atendente") as ReturnType<typeof acharNo> & { maxTries?: number };
+    expect(atendente.onError).toBe("continueErrorOutput");
+    expect(atendente.retryOnFail).toBe(true);
+    expect(atendente.maxTries).toBe(3);
     expect(destinos(wf, "Atendente")).toEqual([["Montar mensagens"], ["Fallback"]]);
     expect(acharNo(wf, "Buscar contexto").onError).toBe("continueErrorOutput");
     expect(destinos(wf, "Buscar contexto")).toEqual([["Atendente"], ["Fallback"]]);

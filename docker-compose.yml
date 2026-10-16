@@ -13,21 +13,22 @@ x-n8n-env: &n8n-env
   N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:?defina N8N_ENCRYPTION_KEY no .env}
   GENERIC_TIMEZONE: America/Sao_Paulo
   TZ: America/Sao_Paulo
-  # Permite $env.NEXT_API_URL, $env.WHATSAPP_PHONE_NUMBER_ID e $env.GEMINI_MODEL nos nós (valores não secretos).
+  # Permite $env.NEXT_API_URL, $env.WHATSAPP_PHONE_NUMBER_ID e $env.GEMINI_MODEL(_RESERVA) nos nós (valores não secretos).
   N8N_BLOCK_ENV_ACCESS_IN_NODE: "false"
   N8N_SECURE_COOKIE: "false"
   N8N_DIAGNOSTICS_ENABLED: "false"
   N8N_PERSONALIZATION_ENABLED: "false"
   N8N_VERSION_NOTIFICATIONS_ENABLED: "false"
   N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
-  WEBHOOK_URL: http://localhost:5678/
+  N8N_WEBHOOK_URL: http://localhost:5678/
   NEXT_API_URL: ${NEXT_API_URL:-http://host.docker.internal:3000}
   WHATSAPP_PHONE_NUMBER_ID: ${WHATSAPP_PHONE_NUMBER_ID:-}
-  GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.5-flash}
+  GEMINI_MODEL: ${GEMINI_MODEL:-gemini-flash-lite-latest}
+  GEMINI_MODEL_RESERVA: ${GEMINI_MODEL_RESERVA:-gemini-3.1-flash-lite}
 
 services:
   postgres:
-    image: postgres:16-alpine
+    image: postgres:17-alpine
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-n8n}

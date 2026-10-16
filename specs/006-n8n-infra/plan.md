@@ -21,7 +21,7 @@ tests/infra/{render-credentials,n8n-export}.test.ts
 | credencial | postgres | `credPostgresDem1` | `postgres` (`host`, `port`, `database`, `user`, `password`, `ssl: disable`) |
 | credencial | webhook-interno | `credWebhookIntr1` | `httpHeaderAuth` (`name: x-webhook-secret`, `value`) |
 | credencial | api-bot | `credApiBotDemo01` | `httpHeaderAuth` (`name: x-api-key`, `value`) |
-| workflow | agente-restaurante | `wfAgenteRestaur1` | sub-workflow (sem publish) |
+| workflow | agente-restaurante | `wfAgenteRestaur1` | sub-workflow (publish — o n8n 2.x só executa a versão publicada) |
 | workflow | whatsapp-entrada | `wfWhatsappEntr01` | publish |
 | workflow | chat-teste | `wfChatTesteDemo1` | publish |
 | workflow | notificar-cliente | `wfNotificarClie1` | publish |
@@ -31,7 +31,7 @@ tests/infra/{render-credentials,n8n-export}.test.ts
 ## Decisões
 - **Por que bootstrap antes do n8n principal:** os comandos de CLI e o processo principal compartilham o banco. Importar e publicar com o n8n parado garante que os webhooks sejam registrados quando ele subir.
 - **`render-credentials.js`:** exporta uma função pura `montarCredenciais(env)`, testada no Vitest, e um `main()` que grava o arquivo. Variáveis ausentes recebem o placeholder `"PREENCHA_NO_ENV"` e geram um aviso no log.
-- **Versões fixadas:** `n8nio/n8n` na versão 2.x estável mais recente no dia da implementação (2.43.x em 2026-10-16), `postgres:16-alpine` e `ngrok/ngrok` na última 3.x. As versões ficam registradas no README.
+- **Versões fixadas:** `n8nio/n8n` na versão 2.x estável mais recente no dia da implementação (2.43.x em 2026-10-16), `postgres:17-alpine` e `ngrok/ngrok` na última 3.x. As versões ficam registradas no README.
 - **Export:** `docker compose exec -T n8n n8n export:workflow --all --separate --pretty --output=/tmp/export`, seguido de `docker compose cp` para uma pasta temporária e da normalização em TS:
   - remove as chaves voláteis;
   - ordena as chaves de topo;

@@ -16,7 +16,8 @@ Criar o "atendente virtual" que conversa em PT-BR, apresenta o cardápio, monta 
   - saída: um único item `{ mensagens: string[] }`.
 - **IA-RF-02** — Antes do LLM, o agente chama `GET {NEXT_API_URL}/api/bot/contexto?telefone=` (credencial API do Bot). O resultado entra no system prompt: loja, horário, taxa, retirada, cardápio em texto, cliente e pedidos recentes.
 - **IA-RF-03** — Nó AI Agent (Tools Agent) com:
-  - **Google Gemini Chat Model**: modelo vindo de `GEMINI_MODEL`, temperatura 0.3;
+  - **Google Gemini Chat Model**: modelo vindo de `GEMINI_MODEL` (padrão `gemini-flash-lite-latest`), temperatura 0.3;
+  - **modelo reserva** (opção *Fallback Model* do agente): `GEMINI_MODEL_RESERVA` (padrão `gemini-3.1-flash-lite`, com cota separada), usado automaticamente quando o principal falha (ex.: 503 por alta demanda);
   - **Postgres Chat Memory**: `sessionKey = telefone`, janela de 20 mensagens, tabela `n8n_chat_historico`;
   - no máximo 6 iterações por mensagem.
 - **IA-RF-04** — O system prompt fica versionado em `n8n/prompts/atendente.md` (fonte da verdade) e é copiado no workflow. Ele contém:
@@ -45,7 +46,7 @@ Criar o "atendente virtual" que conversa em PT-BR, apresenta o cardápio, monta 
   - extrai o BR Code da resposta com a regex `/000201[^\n]*6304[0-9A-Fa-f]{4}/` (gulosa, até o último CRC da linha);
   - devolve `mensagens = [textoSemOCodigo.trim(), codigo]`, ou `[texto]` quando não há código;
   - descarta mensagens vazias e trunca cada uma em 4096 caracteres (limite do WhatsApp).
-- **IA-RF-07** — Erro no agente (429 de cota, timeout, erro do modelo) segue pela saída de erro do nó e devolve `{ mensagens: ["Desculpe, tive um probleminha técnico agora. Pode mandar sua mensagem de novo em alguns instantes? 🙏"] }`.
+- **IA-RF-07** — Erro no agente faz o nó tentar de novo até 2 vezes, com 3 s de intervalo, o que absorve 503 passageiros. Persistindo (429 de cota, timeout, modelo indisponível), segue pela saída de erro do nó e devolve `{ mensagens: ["Desculpe, tive um probleminha técnico agora. Pode mandar sua mensagem de novo em alguns instantes? 🙏"] }`.
 - **IA-RF-08** — Workflow **"Chat Teste"** (publicado):
   - Chat Trigger público em modo hosted chat, com mensagem inicial "Olá! 👋 Sou o atendente virtual do Burger Demo (modo teste). Quer ver o cardápio?";
   - chama o agente com `telefone = "teste:" + sessionId`, `nome = "Cliente Teste"`, `texto = chatInput`;
@@ -83,3 +84,6 @@ O código do nó Code é testado de forma automática; os cenários de conversa,
 ## Histórico
 - 2026-10-16 — versão inicial. A regex de Pix foi trocada de `000201\S+` (do plano original) para uma versão sem quebra de linha que aceita espaços, porque o BR Code contém o nome do recebedor com espaços.
 - 2026-10-16 — A regex passou a ser gulosa (`[^\n]*`): a sequência "6304" pode aparecer dentro de um valor do código, e o CRC verdadeiro é sempre a última ocorrência. Os workflows são gerados como JSON e validados por testes estruturais; os campos de cada nó foram conferidos nas definições do `n8n-nodes-base` e do `@n8n/n8n-nodes-langchain` 2.43.2, as versões usadas pelo n8n 2.43.4.
+- 2026-10-16 — Primeira execução real: o Google não oferece mais o `gemini-2.5-flash` para usuários novos (404), e o `gemini-3.8-flash` às vezes responde 503 por alta demanda. O padrão passou para o alias `gemini-flash-latest`, testado com chamada de ferramenta e mantido atualizado pelo Google, e o nó Atendente ganhou retry (IA-RF-07).
+- 2026-10-16 — Com o `gemini-flash-latest` em 503 por alta demanda mesmo depois do retry, foi incluído o modelo reserva `gemini-flash-lite-latest` (*Fallback Model* do AI Agent v3.1), também testado com chamada de ferramenta.
+- 2026-10-16 — A cota real do free tier é **por modelo e por dia**: o `gemini-3.8-flash` (por trás do `gemini-flash-latest`) devolveu 429 com `limit: 20` (`GenerateRequestsPerDayPerProjectPerModel-FreeTier`). Os modelos Flash-Lite têm cerca de 500 por dia, segundo guias de set/2026. Os padrões passaram a ser `gemini-flash-lite-latest` (principal) e `gemini-3.1-flash-lite` (reserva), ambos testados com chamada de ferramenta.
