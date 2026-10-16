@@ -32,3 +32,6 @@ local.db-*
 *.pem
 .pnp
 .pnp.*
+
+# screenshots do roteiro E2E
+.e2e/

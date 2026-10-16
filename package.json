@@ -13,7 +13,8 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx --env-file-if-exists=.env scripts/db-migrar.ts",
     "db:seed": "tsx --env-file-if-exists=.env scripts/db-seed.ts",
-    "db:reset": "tsx --env-file-if-exists=.env scripts/db-reset.ts"
+    "db:reset": "tsx --env-file-if-exists=.env scripts/db-reset.ts",
+    "e2e:admin": "node scripts/e2e-admin.mjs"
   },
   "dependencies": {
     "@libsql/client": "^0.18.0",
@@ -41,6 +42,7 @@
     "drizzle-kit": "^0.31.11",
     "eslint": "^9",
     "eslint-config-next": "16.4.1",
+    "playwright-core": "1.64.0",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
     "typescript": "^5",

@@ -63,6 +63,7 @@ Dar ao restaurante uma tela para acompanhar e mover os pedidos em tempo quase re
 - **ADM-RNF-01** — Responsivo: usável em tablet (kanban com rolagem horizontal) e no celular.
 - **ADM-RNF-02** — Tudo em PT-BR; valores em R$; datas relativas em PT-BR.
 - **ADM-RNF-03** — Nenhum dado do admin sem sessão: as server actions validam a sessão mesmo que alguém chame direto.
+- **ADM-RNF-04** — Existe um roteiro E2E automatizado e opcional, `pnpm e2e:admin`. Ele usa `playwright-core` com o Chrome instalado na máquina e percorre CA-02 e CA-04 a CA-09, além da responsividade. Usa telefone `teste:`, para não disparar notificações, e apaga o item que cria.
 
 ## Critérios de aceite
 - **CA-01** — Dado que estou sem sessão, quando acesso `/admin/pedidos`, então vou para `/login`. Quando chamo `/api/admin/pedidos`, recebo 401.
@@ -81,3 +82,9 @@ Vários usuários ou perfis, edição de configurações além do switch da loja
 
 ## Histórico
 - 2026-10-16 — versão inicial.
+- 2026-10-16 — Verificação no navegador encontrou e corrigiu 3 defeitos:
+  - o e-mail era apagado depois de um login com erro, por causa do reset automático de formulário do React 19 (agora o e-mail volta no estado da action);
+  - o toast no canto superior direito cobria o switch "Loja aberta" (os toasts foram para baixo);
+  - o cabeçalho transbordava em 390px (agora quebra linha).
+
+  Incluído o ADM-RNF-04 (E2E automatizado), porque o usuário pediu explicitamente uma PoC testável.

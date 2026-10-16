@@ -24,13 +24,13 @@ Legenda: ⬜ não iniciada · 🟨 em andamento · ✅ concluída · ⛔ bloquea
 | 002 | [cardapio-e-pedidos](002-cardapio-e-pedidos/tasks.md) | ✅ | 27/27 | |
 | 003 | [pagamento-pix](003-pagamento-pix/tasks.md) | ✅ | 19/19 | AbacatePay v2 testado com fetch falso; chave real pendente |
 | 004 | [api-do-bot](004-api-do-bot/tasks.md) | ✅ | 13/13 | Verificado com curl contra o dev server |
-| 005 | [painel-admin](005-painel-admin/tasks.md) | ⬜ | 0/21 | |
+| 005 | [painel-admin](005-painel-admin/tasks.md) | ✅ | 22/22 | `pnpm e2e:admin` verde; 3 defeitos de UI corrigidos |
 | 006 | [n8n-infra](006-n8n-infra/tasks.md) | ⬜ | 0/11 | |
 | 007 | [agente-ia](007-agente-ia/tasks.md) | ⬜ | 0/10 | Precisa de `GEMINI_API_KEY` para o VERIF manual |
 | 008 | [whatsapp](008-whatsapp/tasks.md) | ⬜ | 0/15 | Precisa de app Meta + `NGROK_*` para o VERIF manual |
 | 009 | [entrega-poc](009-entrega-poc/tasks.md) | 🟨 | 1/10 | CLAUDE.md criado na Etapa 1 |
 
-**Total:** 80/146 tarefas.
+**Total:** 102/147 tarefas.
 
 ## Credenciais externas (o usuário providencia)
 
