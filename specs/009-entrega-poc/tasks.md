@@ -18,7 +18,7 @@
       Depende de: todas as features · Pronto quando: verde
 - [x] T009.08 VERIF: varredura de segredos (`git grep` pelos prefixos) — ENT-RNF-02, CA-04
       Depende de: — · Pronto quando: limpo
-- [ ] T009.09 VERIF: executar o Caminho rápido do zero (banco e volumes limpos) e registrar em verificacao-e2e.md — CA-01, CA-02
+- [x] T009.09 VERIF: executar o Caminho rápido do zero (banco e volumes limpos) e registrar em verificacao-e2e.md — CA-01, CA-02
       Depende de: T009.06 · Pronto quando: pedido pago visto no admin
-- [ ] T009.10 VERIF: revisão final de rastreabilidade (todo RF tem tarefa e CA; todas as tasks marcadas; ROADMAP 100%); commit `docs(009)` + tag `poc-v0.1`
+- [x] T009.10 VERIF: revisão final de rastreabilidade (todo RF tem tarefa e CA; todas as tasks marcadas; ROADMAP 100%); commit `docs(009)` + tag `poc-v0.1`
       Depende de: todas · Pronto quando: ROADMAP todo ✅ (ou ⛔ justificado por credencial externa)

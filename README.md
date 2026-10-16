@@ -27,7 +27,7 @@ Pix: Next.js ⇄ AbacatePay v2 (dev) — ou provedor "mock" sem conta nenhuma
 |---|---|---|
 | App, API e painel | Next.js 16.4.1 (App Router, Cache Components), Tailwind 4, shadcn/ui | — |
 | Banco | Drizzle 0.45 + libSQL (`file:` local / Turso) | Turso free |
-| Orquestração da IA | n8n 2.43.4 + Postgres 16 (Docker) | self-hosted |
+| Orquestração da IA | n8n 2.43.4 + Postgres 17 (Docker) | self-hosted |
 | Modelo | Google Gemini Flash (free tier), trocável por Groq | grátis |
 | WhatsApp | Cloud API oficial da Meta (número de teste) | grátis |
 | Pix | AbacatePay API v2 (dev mode) ou `mock` | grátis |

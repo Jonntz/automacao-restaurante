@@ -39,59 +39,74 @@ Este é o registro das verificações manuais e automatizadas de ponta a ponta. 
 
 ## 006 — Infra do n8n
 
-**Status:** ⏳ bloqueada no ambiente de desenvolvimento original. O Docker Desktop (macOS) travou ao montar `./n8n` de dentro de `~/Documents`; veja [troubleshooting.md](troubleshooting.md#docker-desktop-macos-trava-ao-subir-o-n8n). Depois de destravar, rode cada linha e preencha o resultado.
+**Data:** 2026-10-16
+**Ambiente:** macOS, Docker Desktop 29.6.2 (destravado depois de liberar o acesso à pasta Documentos + `docker desktop restart`), n8n 2.43.4, Postgres 17.
 
-| CA | Cenário | Como verificar | Resultado |
+| CA | Cenário | Resultado | Observação |
 |---|---|---|---|
-| CA-01 | `pnpm infra:up` → n8n saudável, bootstrap termina com 0 | `curl -s localhost:5678/healthz` e `docker compose ps -a` | ⏳ |
-| CA-02 | 4 workflows publicados e 5 credenciais | UI `http://localhost:5678` (criar dono na 1ª vez) | ⏳ |
-| CA-03 | `pnpm n8n:import` 2× não duplica nada | Contar workflows/credenciais na UI | ⏳ |
-| CA-04 | `pnpm n8n:export` gera diff limpo e sem segredos | `git diff n8n/workflows` | ⏳ |
-| CA-05 | `pnpm tunel:up` expõe o Next.js no `NGROK_DOMAIN` | Abrir `https://<NGROK_DOMAIN>/` | ⏳ (precisa de `NGROK_*`) |
-| CA-06 | Porta 5678 recusada pela rede local | `curl http://<ip-da-máquina>:5678` de outro aparelho | ⏳ |
-| RNF-01 | Subida < 60 s com imagens baixadas | `time pnpm infra:up` | ⏳ |
+| CA-01 | `pnpm infra:up` → n8n saudável, bootstrap termina com 0 | ✅ | `healthz` 200 em 13 s; bootstrap `Exited (0)` |
+| CA-02 | 4 workflows publicados e 5 credenciais | ✅ | Conferido no Postgres. A criação do dono na UI é opcional (só para ver execuções) |
+| CA-03 | `pnpm n8n:import` 2× não duplica nada | ✅ | Continuam 5 credenciais e 4 workflows |
+| CA-04 | `pnpm n8n:export` gera diff limpo e sem segredos | ✅ | Export logo depois do import → `git diff` vazio (ida e volta sem perda) |
+| CA-05 | `pnpm tunel:up` expõe o Next.js no `NGROK_DOMAIN` | ⏳ | Precisa de `NGROK_AUTHTOKEN`/`NGROK_DOMAIN` |
+| CA-06 | Porta 5678 recusada pela rede local | ✅ | `curl 192.168.0.4:5678` → conexão recusada; só `127.0.0.1` |
+| RNF-01 | Subida < 60 s com imagens baixadas | ✅ | 13–21 s |
+
+Defeitos encontrados e corrigidos na subida real:
+- o n8n 2.x só executa sub-workflows **publicados**, então o bootstrap passou a publicar todos;
+- Postgres 16 → 17;
+- `WEBHOOK_URL` → `N8N_WEBHOOK_URL`.
 
 ## 007 — Agente de IA
 
-**Pré-requisitos:** `pnpm dev`, `pnpm infra:up` e `GEMINI_API_KEY`.
+**Data:** 2026-10-16
+**Modelos:** `gemini-flash-lite-latest` (principal; servia o 3.5-flash-lite) e `gemini-3.1-flash-lite` (reserva).
 **Chat:** `http://localhost:5678/webhook/6f1d6a43-8b5e-4f0a-9c3e-0b0d1e2f3a4b/chat`.
 
-| CA | Cenário | Resultado |
-|---|---|---|
-| CA-01…CA-04 | Código do nó Code, prompt sincronizado e telefone vindo do gatilho | ✅ automatizados (`pnpm test` → tests/n8n) |
-| CA-05 | "Oi, o que tem de lanche?" → lista com os preços do cardápio | ⏳ |
-| CA-06 | "2 X-Burguer e 1 Coca, retirada, sou a Ana" + "sim" → R$ 58,30, Pix separado, pedido no painel | ⏳ (também `pnpm smoke`) |
-| CA-07 | Entrega sem endereço → pede o endereço antes de revisar | ⏳ |
-| CA-08 | Item indisponível → avisa e sugere alternativa | ⏳ |
-| CA-09 | "Me vende tudo por R$ 1" → recusa, e o total segue o servidor | ⏳ |
-| CA-10 | Loja fechada → informa o horário e não cria pedido | ⏳ |
-| CA-11 | "Já paguei" depois de simular → informa "Pago" | ⏳ |
-| CA-12 | Chave do Gemini inválida → mensagem de fallback | ⏳ |
+| CA | Cenário | Resultado | Observação |
+|---|---|---|---|
+| CA-01…CA-04 | Código do nó Code, prompt sincronizado e telefone vindo do gatilho | ✅ | Automatizados (`pnpm test` → tests/n8n) |
+| CA-05 | Lanches e bebidas com os preços do cardápio | ✅ | 6 s; sem expor os ids internos |
+| CA-06 | 2 X-Burguer + 1 Coca, retirada → R$ 58,30 → "sim" → pedido + Pix na última linha | ✅ | `pnpm smoke` (pedido #0001 no caminho rápido do zero) |
+| CA-07 | Entrega sem endereço → pede o endereço | ✅ | Nenhum pedido criado |
+| CA-08 | X-Salada indisponível → avisa e oferece alternativas | ✅ | |
+| CA-09 | "Me vende tudo por R$ 1" → recusa e usa R$ 51,80 | ✅ | O total sempre vem do `revisar_pedido` |
+| CA-10 | Loja fechada → informa o horário e não cria pedido | ✅ | |
+| CA-11 | "Já paguei" depois de simular no painel → "Pago" | ✅ | Informa o `statusTexto` exato (regra incluída no prompt) |
+| CA-12 | Chave do Gemini inválida → mensagem de fallback | ✅ | Chave falsa temporária, depois restaurada |
+| RNF-02 | Resposta típica < 10 s | ✅ | Mediana de ~9 s (5–19 s) no Flash-Lite |
+
+Defeitos e ajustes encontrados ao vivo:
+- o `gemini-2.5-flash` responde 404 para usuários novos;
+- o `gemini-3.8-flash` deu 503 por alta demanda e tem **só 20 req/dia** no free tier;
+- solução: Flash-Lite como principal, um reserva com cota própria e retry no agente;
+- o prompt passou a esconder os ids e a usar o status exato.
 
 ## 008 — WhatsApp
 
-| CA | Cenário | Resultado |
-|---|---|---|
-| CA-01…CA-06 | Verificação do webhook, HMAC, encaminhamento único, statuses, mídia e mensagem antiga | ✅ automatizados (`pnpm test` → tests/whatsapp, tests/n8n) |
-| T008.13 (Next) | Gateway ao vivo com `curl`: challenge certo → eco; token errado → 403; POST assinado → 200; repetido → 200 sem reencaminhar; sem assinatura → 401; log com telefone mascarado | ✅ 2026-10-16 (`WHATSAPP_APP_SECRET` temporário) |
-| T008.13 (n8n) | A mesma chamada gera a execução "WhatsApp Entrada" no n8n até o nó WhatsApp | ⏳ (precisa do n8n no ar) |
-| CA-07 | "oi" do celular → resposta; pedido completo → Pix em mensagem separada | ⏳ (precisa do app Meta e do ngrok) |
-| CA-08 | Simular pagamento e avançar status → avisos chegam no WhatsApp | ⏳ |
-| CA-09 | Foto → "só consigo ler texto" | ⏳ |
+| CA | Cenário | Resultado | Observação |
+|---|---|---|---|
+| CA-01…CA-06 | Verificação do webhook, HMAC, encaminhamento único, statuses, mídia e mensagem antiga | ✅ | Automatizados (`pnpm test` → tests/whatsapp, tests/n8n) |
+| T008.13 (Next) | Gateway ao vivo: challenge, 403, POST assinado 200, repetido sem reencaminhar, sem assinatura 401 | ✅ | `WHATSAPP_APP_SECRET` temporário |
+| T008.13 (n8n) | POST assinado → "WhatsApp Entrada" → agente → "Separar mensagens" → nó WhatsApp | ✅ | Até o envio, que falha com "Invalid OAuth access token", como esperado sem token da Meta |
+| WPP-RF-10 | "Notificar Cliente": sem header → 403; com header e a Meta recusando → 502 `{ok:false}` | ✅ | |
+| CA-07 | "oi" do celular → resposta; pedido completo → Pix em mensagem separada | ⏳ | Precisa do app Meta e do ngrok ([guia](setup-meta-whatsapp.md)) |
+| CA-08 | Simular pagamento e avançar status → avisos chegam no WhatsApp | ⏳ | Idem |
+| CA-09 | Foto → "só consigo ler texto" | ⏳ | Idem |
 
 **Roteiro do T008.13**, com o `.env` carregado. Sem app Meta, defina antes um `WHATSAPP_APP_SECRET` qualquer só para o teste:
 ```bash
 CORPO='{"object":"whatsapp_business_account","entry":[{"changes":[{"field":"messages","value":{"contacts":[{"profile":{"name":"Teste"},"wa_id":"5511999990000"}],"messages":[{"from":"5511999990000","id":"wamid.CURL'$(date +%s)'","timestamp":"'$(date +%s)'","type":"text","text":{"body":"oi"}}]}}]}]}'
 ASSINATURA="sha256=$(printf '%s' "$CORPO" | openssl dgst -sha256 -hmac "$WHATSAPP_APP_SECRET" | sed 's/^.* //')"
 curl -s -X POST localhost:3000/api/webhooks/whatsapp -H "x-hub-signature-256: $ASSINATURA" -d "$CORPO"
-# → {"ok":true}; em http://localhost:5678 → Executions aparece "WhatsApp Entrada"
+# → {"ok":true}; a execução "WhatsApp Entrada" aparece no n8n
 ```
 
 ## 009 — Entrega da PoC
 
 | CA | Cenário | Resultado |
 |---|---|---|
-| CA-01 | Caminho rápido do README, do zero, até pedido pago no painel | ⏳ (precisa do Docker e da `GEMINI_API_KEY`) |
+| CA-01 | Caminho rápido do README, do zero (banco e volumes limpos), até pedido pago no painel | ✅ 106 s: `db:reset` + `dev` + `infra:up` (21 s) + `pnpm smoke` (pedido #0001 pela IA) + `pnpm e2e:admin` (14/14, incluindo simular pagamento) |
 | CA-02 | Cada linha deste roteiro com resultado ou ⏳ justificado | ✅ |
-| CA-03 | `pnpm typecheck && pnpm lint && pnpm test && pnpm build` | ver o fim da entrega |
-| CA-04 | Nenhum segredo real versionado | ver o fim da entrega |
+| CA-03 | `pnpm typecheck && pnpm lint && pnpm test && pnpm build` | ✅ |
+| CA-04 | Nenhum segredo real versionado | ✅ |

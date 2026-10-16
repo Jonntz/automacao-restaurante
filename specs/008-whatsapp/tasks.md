@@ -27,7 +27,7 @@
       Arquivo: n8n/workflows/whatsapp-entrada.json · Depende de: T008.10, 007 · Pronto quando: T008.10 (parte Entrada) passa e o import publica
 - [x] T008.12 IMPL: workflow notificar-cliente.json — WPP-RF-10, WPP-RF-11
       Arquivo: n8n/workflows/notificar-cliente.json · Depende de: T008.10 · Pronto quando: T008.10 passa e o import publica
-- [ ] T008.13 VERIF: sem a Meta, simular a ponta interna com `curl` assinado com o `APP_SECRET` do `.env` contra /api/webhooks/whatsapp e ver a execução no n8n até o nó WhatsApp (que falha sem token real, como esperado) — WPP-RF-07, WPP-RF-09
+- [x] T008.13 VERIF: sem a Meta, simular a ponta interna com `curl` assinado com o `APP_SECRET` do `.env` contra /api/webhooks/whatsapp e ver a execução no n8n até o nó WhatsApp (que falha sem token real, como esperado) — WPP-RF-07, WPP-RF-09
       Depende de: T008.09, T008.11 · Pronto quando: a execução aparece no n8n com os dados certos
 
 ## Documentação e E2E

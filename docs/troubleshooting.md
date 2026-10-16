@@ -20,6 +20,7 @@ Cada problema está no formato **sintoma → causa → solução**. Os guias de 
   3. Reinicie o Docker Desktop pelo menu da barra.
   4. Rode `pnpm infra:up` de novo.
   5. Se persistir, mova o projeto para fora de `~/Documents` (por exemplo, `~/dev/automacao-restaurante`).
+- **Comprovado em 2026-10-16:** liberar a permissão **e** rodar `docker desktop restart` resolveu. Liberar só a permissão não basta: o processo antigo continua travado.
 
 ### `host.docker.internal` não resolve (Linux)
 - **Causa:** no Linux, o nome não existe por padrão.
@@ -30,6 +31,14 @@ Cada problema está no formato **sintoma → causa → solução**. Os guias de 
 - **Solução:** pare o `pnpm dev`, rode `pnpm db:reset` e suba o `pnpm dev` de novo.
 
 ## n8n
+
+### Chat de teste responde 404 "webhook … is not registered" logo depois de um import
+- **Causa:** o `pnpm n8n:import` reinicia o n8n, e os webhooks levam alguns segundos para registrar depois de o `/healthz` responder.
+- **Solução:** espere ~5 s e tente de novo. No log aparece `Processed … 4 published workflows` quando tudo está pronto.
+
+### "Workflow is not active and cannot be executed"
+- **Causa:** no n8n 2.x, o nó Execute Workflow só chama sub-workflows **publicados**.
+- **Solução:** o bootstrap já publica o "Agente Restaurante". Se você criou outro sub-workflow pela UI, clique em **Publish** nele também.
 
 ### Workflows não aparecem ou não estão publicados
 - **Solução:**
@@ -52,6 +61,14 @@ Cada problema está no formato **sintoma → causa → solução**. Os guias de 
   - o plano B é trocar a ferramenta por um **Call n8n Workflow Tool** com entradas tipadas (specs/007-agente-ia/plan.md).
 
 ## IA (Gemini)
+
+### Erro 404 "model … is no longer available to new users"
+- **Causa:** o Google descontinua versões fixas de modelo para contas novas (aconteceu com o `gemini-2.5-flash`).
+- **Solução:** use os aliases `gemini-flash-lite-latest` / `gemini-flash-latest` em `GEMINI_MODEL` e rode `docker compose up -d`.
+
+### Erro 429 "limit: 20 … PerDayPerProjectPerModel"
+- **Causa:** a cota gratuita é **por modelo e por dia**. Os modelos Flash (não Lite) têm só ~20 requisições por dia.
+- **Solução:** mantenha o principal num Flash-Lite (padrão) e o reserva noutro modelo, porque cada modelo tem a própria cota. A cota volta no dia seguinte (horário do Pacífico).
 
 ### O bot responde "tive um probleminha técnico"
 - **Causa:** erro no agente. Os motivos mais comuns:

@@ -6,25 +6,27 @@ O agente do n8n usa o **Google Gemini no free tier**. Não precisa de cartão de
 
 ## 1. Criar a chave
 1. Acesse <https://aistudio.google.com/apikey> com uma conta Google.
-2. Clique em **Create API key** e copie a chave (começa com `AIza…`).
+2. Clique em **Create API key** e copie a chave. Ela começa com `AIza…`, ou com `AQ.…` no formato novo.
 3. No `.env` da raiz:
    ```env
    GEMINI_API_KEY=AIza...
-   GEMINI_MODEL=gemini-2.5-flash
+   GEMINI_MODEL=gemini-flash-lite-latest
+   GEMINI_MODEL_RESERVA=gemini-3.1-flash-lite
    ```
 4. Se o n8n já estiver rodando, atualize a credencial: `pnpm n8n:import`.
 
 ## 2. Escolher o modelo
 | `GEMINI_MODEL` | Quando usar |
 |---|---|
-| `gemini-2.5-flash` (padrão) | Melhor equilíbrio entre qualidade e uso de ferramentas no free tier |
-| `gemini-2.5-flash-lite` (ou o Flash-Lite mais novo) | Se você estiver batendo no limite de requisições por minuto |
-| Flash mais novo listado no AI Studio | Pode trocar à vontade: o nó do n8n lê o nome do modelo da variável |
+| `gemini-flash-lite-latest` (padrão de `GEMINI_MODEL`) | Alias do Flash-Lite atual (em out/2026, o 3.5-flash-lite). Tem a **maior cota diária** do free tier (~500 req/dia) e chama ferramentas bem |
+| `gemini-3.1-flash-lite` (padrão de `GEMINI_MODEL_RESERVA`) | Reserva com **cota própria**: entra quando o principal dá 503 ou 429 |
+| `gemini-flash-latest` | Melhor qualidade (em out/2026, o 3.8-flash), mas com só **20 req/dia** no free tier: bom para uma demonstração curta |
+| Uma versão fixa (ex.: `gemini-3.5-flash`) | Comportamento estável entre testes, mas pode ser descontinuada. Em 2026-10-16 o `gemini-2.5-flash` já respondia 404 para usuários novos |
 
-O nome vai para o nó como `models/<GEMINI_MODEL>`. Confira os modelos disponíveis para a sua chave em **AI Studio → Get code** ou na lista de modelos.
+O nome vai para o nó como `models/<GEMINI_MODEL>`. Depois de mudar o valor, rode `docker compose up -d` para recriar o n8n com a variável nova. Confira os modelos disponíveis para a sua chave em **AI Studio → Get code** ou na lista de modelos.
 
 ## 3. Limites do free tier
-Os limites são **por projeto** e mudam com frequência. Em 2026 ficavam por volta de **10–15 requisições por minuto** e **algumas centenas por dia** para o Flash. Os números exatos da sua chave aparecem em **AI Studio → Usage / Rate limits**.
+Os limites são **por projeto, por modelo e por dia**, e mudam com frequência. Em 16/10/2026, a chave usada no desenvolvimento recebeu `429 … limit: 20` no `gemini-3.8-flash` (`GenerateRequestsPerDayPerProjectPerModel-FreeTier`). Os guias de set/2026 apontam ~500/dia para os Flash-Lite. Os números exatos da sua chave aparecem em **AI Studio → Usage / Rate limits**.
 
 Cada mensagem do cliente consome **1 requisição + 1 por ferramenta chamada**:
 - conversa simples: 1 requisição;
@@ -33,7 +35,7 @@ Cada mensagem do cliente consome **1 requisição + 1 por ferramenta chamada**:
 
 O contexto (cardápio, loja e cliente) já entra no prompt e não gasta requisição (ADR-06).
 
-Quando a cota estoura (erro 429), o cliente recebe a mensagem de fallback ("tive um probleminha técnico…") e o workflow não quebra.
+Se o modelo principal falhar, o agente usa o **modelo reserva** (`GEMINI_MODEL_RESERVA`, padrão `gemini-3.1-flash-lite`). Como a cota é por modelo, o reserva também soma capacidade. Além disso, o nó tenta de novo até 2 vezes, o que cobre picos de demanda (erro 503). Se a cota estourar (erro 429) ou o erro persistir, o cliente recebe a mensagem de fallback ("tive um probleminha técnico…") e o workflow não quebra.
 
 ## 4. Trocar para Groq (Llama) se preferir
 O Groq também tem free tier e suporta chamada de ferramentas:
