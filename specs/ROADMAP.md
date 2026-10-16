@@ -27,10 +27,10 @@ Legenda: ⬜ não iniciada · 🟨 em andamento · ✅ concluída · ⛔ bloquea
 | 005 | [painel-admin](005-painel-admin/tasks.md) | ✅ | 22/22 | `pnpm e2e:admin` verde; 3 defeitos de UI corrigidos |
 | 006 | [n8n-infra](006-n8n-infra/tasks.md) | ⛔ | 7/11 | Código pronto; verificação bloqueada: Docker Desktop travado (ver Histórico da spec) |
 | 007 | [agente-ia](007-agente-ia/tasks.md) | ⛔ | 8/10 | Workflows + testes estruturais prontos; T007.07/T007.10 precisam de Docker + `GEMINI_API_KEY` |
-| 008 | [whatsapp](008-whatsapp/tasks.md) | ⬜ | 0/15 | Precisa de app Meta + `NGROK_*` para o VERIF manual |
+| 008 | [whatsapp](008-whatsapp/tasks.md) | ⛔ | 13/15 | Gateway + workflows + guia prontos; T008.13 precisa de Docker, T008.15 de app Meta + ngrok |
 | 009 | [entrega-poc](009-entrega-poc/tasks.md) | 🟨 | 1/10 | CLAUDE.md criado na Etapa 1 |
 
-**Total:** 117/147 tarefas.
+**Total:** 130/147 tarefas.
 
 ## Credenciais externas (o usuário providencia)
 

@@ -1,0 +1,260 @@
+{
+  "id": "wfWhatsappEntr01",
+  "name": "WhatsApp Entrada",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp-entrada",
+        "authentication": "headerAuth",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "22bd26a0-c90c-579f-ba48-ecdde37a148c",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "credWebhookIntr1",
+          "name": "Webhook interno (x-webhook-secret)"
+        }
+      },
+      "webhookId": "4fb30f48-a5b8-5fb9-8cd7-259b8de39135"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "338faace-a1fa-53f4-a331-1496533b3aab",
+              "leftValue": "={{ $json.body.tipo }}",
+              "rightValue": "texto",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a50f7bb3-d7f3-568d-ad12-1b1d3fe37593",
+      "name": "É texto?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        220,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "wfAgenteRestaur1",
+          "mode": "id"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "telefone": "={{ $json.body.telefone }}",
+            "nome": "={{ $json.body.nome }}",
+            "texto": "={{ $json.body.texto }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "telefone",
+              "displayName": "telefone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "nome",
+              "displayName": "nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "texto",
+              "displayName": "texto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "c4c42e6f-1493-521b-9cc8-418a312028fa",
+      "name": "Chamar atendente",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        460,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "mensagens",
+        "include": "noOtherFields",
+        "options": {
+          "destinationFieldName": "mensagem"
+        }
+      },
+      "id": "a20b7557-1dba-5017-acf9-6b396bf51114",
+      "name": "Separar mensagens",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        680,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "phoneNumberId": "={{ $env.WHATSAPP_PHONE_NUMBER_ID }}",
+        "recipientPhoneNumber": "={{ $('Webhook').first().json.body.telefone }}",
+        "messageType": "text",
+        "textBody": "={{ $json.mensagem }}",
+        "additionalFields": {}
+      },
+      "id": "9468b9ee-820a-5d7a-b4e8-5dbebad15de8",
+      "name": "Responder no WhatsApp",
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        900,
+        200
+      ],
+      "credentials": {
+        "whatsAppApi": {
+          "id": "credWhatsappDem1",
+          "name": "WhatsApp Cloud API"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "phoneNumberId": "={{ $env.WHATSAPP_PHONE_NUMBER_ID }}",
+        "recipientPhoneNumber": "={{ $('Webhook').first().json.body.telefone }}",
+        "messageType": "text",
+        "textBody": "Por enquanto só consigo ler mensagens de texto 🙂 Pode escrever o que deseja?",
+        "additionalFields": {}
+      },
+      "id": "b6b7701a-7bcf-5274-96cb-58bc4306a2fa",
+      "name": "Avisar só texto",
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        460,
+        420
+      ],
+      "credentials": {
+        "whatsAppApi": {
+          "id": "credWhatsappDem1",
+          "name": "WhatsApp Cloud API"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 2000
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "É texto?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "É texto?": {
+      "main": [
+        [
+          {
+            "node": "Chamar atendente",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Avisar só texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chamar atendente": {
+      "main": [
+        [
+          {
+            "node": "Separar mensagens",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separar mensagens": {
+      "main": [
+        [
+          {
+            "node": "Responder no WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

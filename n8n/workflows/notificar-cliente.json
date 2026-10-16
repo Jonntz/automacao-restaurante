@@ -1,0 +1,130 @@
+{
+  "id": "wfNotificarClie1",
+  "name": "Notificar Cliente",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "notificar-cliente",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "2ceeab22-a762-5177-b93b-be1278244100",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "credWebhookIntr1",
+          "name": "Webhook interno (x-webhook-secret)"
+        }
+      },
+      "webhookId": "97d2f914-bbea-5d90-abb6-35b33000ce56"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "phoneNumberId": "={{ $env.WHATSAPP_PHONE_NUMBER_ID }}",
+        "recipientPhoneNumber": "={{ $json.body.telefone }}",
+        "messageType": "text",
+        "textBody": "={{ $json.body.mensagem }}",
+        "additionalFields": {}
+      },
+      "id": "cb66ec89-4c6a-50a1-b744-4dc172b64a4b",
+      "name": "Enviar WhatsApp",
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "credentials": {
+        "whatsAppApi": {
+          "id": "credWhatsappDem1",
+          "name": "WhatsApp Cloud API"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 2000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"ok\": true\n}",
+        "options": {}
+      },
+      "id": "6a57da54-dc43-5c22-8933-cbcdd48eb6ac",
+      "name": "OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        480,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: false, erro: $json.error?.message ?? 'Falha ao enviar pelo WhatsApp' }) }}",
+        "options": {
+          "responseCode": 502
+        }
+      },
+      "id": "bd05c74f-a891-5bba-94ba-dcdb48005769",
+      "name": "Falhou",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        480,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Enviar WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar WhatsApp": {
+      "main": [
+        [
+          {
+            "node": "OK",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Falhou",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}
