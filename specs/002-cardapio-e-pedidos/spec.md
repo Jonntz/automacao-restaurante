@@ -60,7 +60,7 @@ Implementar as regras de negócio de cardápio e pedido, sem HTTP: consultar o c
   - `aguardando_pagamento` → `null`, porque o avanço depende do pagamento.
 - **PED-RF-16** — `alterarStatus(db, pedidoId, novoStatus, { origem: 'admin' | 'pagamento', notificador, agora })`:
   - valida a transição e grava `status` + `atualizado_em`;
-  - depois do commit, chama `notificador.notificar(pedido, novoStatus)`;
+  - depois do commit, monta o texto com `mensagemDeStatus` (PED-RF-18) e chama `notificador.notificar({ telefone, canal }, mensagem)`;
   - devolve `{ ok: false, erro }` para transição inválida ou pedido inexistente.
 - **PED-RF-17** — `rotuloStatus(status)` devolve o texto em PT-BR (ex.: `"Aguardando pagamento"`), usado no admin e para o LLM.
 
@@ -68,7 +68,7 @@ Implementar as regras de negócio de cardápio e pedido, sem HTTP: consultar o c
 - **PED-RF-18** — `mensagemDeStatus(pedido, status, config)` devolve o texto ao cliente para `pago`, `em_preparo`, `saiu_para_entrega`, `pronto_para_retirada`, `entregue` e `cancelado`, sempre com o número `#0012`:
   - `saiu_para_entrega` inclui o tempo estimado;
   - `pronto_para_retirada` inclui o endereço de retirada.
-- **PED-RF-19** — `criarNotificadorN8n({ n8nUrl, segredo, fetch })` implementa `Notificador`:
+- **PED-RF-19** — `criarNotificadorN8n({ n8nUrl, segredo, fetch })` implementa `Notificador` (`notificar(destino: { telefone, canal }, mensagem)`):
   - faz `POST {n8nUrl}/webhook/notificar-cliente` com `{ telefone, mensagem }` e header `x-webhook-secret`, com timeout de 5 s;
   - **nunca lança erro**, só registra no log;
   - **ignora** clientes do canal `teste`.
@@ -89,7 +89,7 @@ Implementar as regras de negócio de cardápio e pedido, sem HTTP: consultar o c
 - **CA-08** — Dado um telefone novo, quando crio o pedido com `nomeCliente`, então o cliente é criado com esse nome. Num segundo pedido com entrega, o `ultimo_endereco` é atualizado.
 - **CA-09** — Dado `em_preparo` numa retirada, quando tento `saiu_para_entrega`, então a transição é recusada. `pronto_para_retirada` é aceita.
 - **CA-10** — Dado um pedido em `aguardando_pagamento`, quando o admin tenta `pago`, então a mudança é recusada. Com a origem `pagamento`, é aceita.
-- **CA-11** — Dada uma transição válida, quando `alterarStatus` conclui, então o notificador recebe o pedido atualizado e o novo status uma vez. Numa transição inválida, o notificador não é chamado.
+- **CA-11** — Dada uma transição válida, quando `alterarStatus` conclui, então o notificador é chamado uma vez, com o telefone e o canal do cliente e a mensagem do novo status. Numa transição inválida, o notificador não é chamado.
 - **CA-12** — Dado um cliente `teste:abc`, quando o notificador HTTP é chamado, então nenhum `fetch` acontece.
 - **CA-13** — Dado que o n8n responde 500 ou estoura o tempo, quando o notificador HTTP é chamado, então a função conclui sem lançar erro.
 
@@ -103,3 +103,4 @@ Cupons, adicionais/variações de item, agendamento, cancelamento pelo cliente, 
 
 ## Histórico
 - 2026-10-16 — versão inicial.
+- 2026-10-16 — A interface `Notificador` passou a receber `({ telefone, canal }, mensagem)`. Quem monta a mensagem é o `alterarStatus`, que tem acesso à configuração da loja. O notificador só entrega.

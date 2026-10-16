@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import { check, index, integer, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
 
 // Fonte: specs/001-fundacao/data-model.md
@@ -173,6 +173,24 @@ export const eventosProcessados = sqliteTable(
   },
   () => [check("eventos_origem_valida", emLista("origem", ORIGEM_EVENTO))],
 );
+
+// Relações (consultas com `with`)
+export const categoriasRelations = relations(categorias, ({ many }) => ({ itens: many(itensCardapio) }));
+export const itensCardapioRelations = relations(itensCardapio, ({ one }) => ({
+  categoria: one(categorias, { fields: [itensCardapio.categoriaId], references: [categorias.id] }),
+}));
+export const clientesRelations = relations(clientes, ({ many }) => ({ pedidos: many(pedidos) }));
+export const pedidosRelations = relations(pedidos, ({ one, many }) => ({
+  cliente: one(clientes, { fields: [pedidos.clienteId], references: [clientes.id] }),
+  itens: many(itensPedido),
+  pagamentos: many(pagamentos),
+}));
+export const itensPedidoRelations = relations(itensPedido, ({ one }) => ({
+  pedido: one(pedidos, { fields: [itensPedido.pedidoId], references: [pedidos.id] }),
+}));
+export const pagamentosRelations = relations(pagamentos, ({ one }) => ({
+  pedido: one(pedidos, { fields: [pagamentos.pedidoId], references: [pedidos.id] }),
+}));
 
 export type Configuracao = typeof configuracoes.$inferSelect;
 export type Categoria = typeof categorias.$inferSelect;

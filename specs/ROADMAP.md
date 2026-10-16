@@ -21,7 +21,7 @@ Legenda: ⬜ não iniciada · 🟨 em andamento · ✅ concluída · ⛔ bloquea
 | # | Feature | Status | Tarefas | Observações |
 |---|---|---|---|---|
 | 001 | [fundacao](001-fundacao/tasks.md) | ✅ | 20/20 | Next 16.4.1 (16.4.2 barrado pela política de idade do pnpm) |
-| 002 | [cardapio-e-pedidos](002-cardapio-e-pedidos/tasks.md) | ⬜ | 0/27 | |
+| 002 | [cardapio-e-pedidos](002-cardapio-e-pedidos/tasks.md) | ✅ | 27/27 | |
 | 003 | [pagamento-pix](003-pagamento-pix/tasks.md) | ⬜ | 0/19 | |
 | 004 | [api-do-bot](004-api-do-bot/tasks.md) | ⬜ | 0/13 | |
 | 005 | [painel-admin](005-painel-admin/tasks.md) | ⬜ | 0/21 | |
@@ -30,7 +30,7 @@ Legenda: ⬜ não iniciada · 🟨 em andamento · ✅ concluída · ⛔ bloquea
 | 008 | [whatsapp](008-whatsapp/tasks.md) | ⬜ | 0/15 | Precisa de app Meta + `NGROK_*` para o VERIF manual |
 | 009 | [entrega-poc](009-entrega-poc/tasks.md) | 🟨 | 1/10 | CLAUDE.md criado na Etapa 1 |
 
-**Total:** 21/146 tarefas.
+**Total:** 48/146 tarefas.
 
 ## Credenciais externas (o usuário providencia)
 

@@ -28,7 +28,7 @@ type LinhaCalculada = { itemId: number; nome: string; precoUnitario: number; qua
 type ResultadoCalculo =
   | { ok: true; linhas: LinhaCalculada[]; subtotal: number; taxa: number; total: number }
   | { ok: false; codigo: 'LOJA_FECHADA' | 'ITENS_INVALIDOS' | 'ENTREGA_INVALIDA'; erros: string[] };
-interface Notificador { notificar(pedido: PedidoComCliente, status: StatusPedido): Promise<void> }
+interface Notificador { notificar(destino: { telefone: string; canal: Canal }, mensagem: string): Promise<void> }
 ```
 
 ## Decisões
