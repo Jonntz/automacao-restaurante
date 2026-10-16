@@ -26,7 +26,7 @@ tests/infra/{render-credentials,n8n-export}.test.ts
 | workflow | chat-teste | `wfChatTesteDemo1` | publish |
 | workflow | notificar-cliente | `wfNotificarClie1` | publish |
 
-> Os nomes dos campos de cada tipo de credencial precisam ser confirmados exportando uma credencial criada na UI da versão fixada (tarefa T006.03). Esta tabela será atualizada se algum campo divergir.
+> ✅ T006.03: tipos e campos confirmados em 2026-10-16 no `dist/types/credentials.json` do `n8n-nodes-base` e do `@n8n/n8n-nodes-langchain` 2.43.2 (as versões usadas pelo n8n 2.43.4). Não houve divergência.
 
 ## Decisões
 - **Por que bootstrap antes do n8n principal:** os comandos de CLI e o processo principal compartilham o banco. Importar e publicar com o n8n parado garante que os webhooks sejam registrados quando ele subir.

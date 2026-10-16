@@ -21,7 +21,8 @@
     "infra:reset": "node -e \"console.log(String.fromCodePoint(9888)+'  Apagando volumes do n8n e do Postgres (workflows, credenciais e histórico de chat)...')\" && docker compose down -v && docker compose up -d",
     "tunel:up": "docker compose --profile tunel up -d ngrok",
     "n8n:import": "docker compose run --rm n8n-bootstrap && docker compose restart n8n",
-    "n8n:export": "tsx scripts/n8n-export.ts"
+    "n8n:export": "tsx scripts/n8n-export.ts",
+    "smoke": "tsx scripts/smoke-chat.ts"
   },
   "dependencies": {
     "@libsql/client": "^0.18.0",

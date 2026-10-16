@@ -4,7 +4,7 @@
       Arquivo: docker-compose.yml · Depende de: 001 (.env.example) · Pronto quando: `docker compose config` válido e o n8n sobe saudável
 - [x] T006.02 SETUP: n8n/ids.json (IDs fixos de credenciais e workflows) — INF-RF-04
       Arquivo: n8n/ids.json · Depende de: — · Pronto quando: os 9 IDs estão definidos
-- [ ] T006.03 VERIF: na UI do n8n fixado, criar uma credencial de cada tipo e exportar (`export:credentials --decrypted`) para confirmar o tipo e os campos; atualizar a tabela do plan.md se divergir — INF-RF-04
+- [x] T006.03 VERIF: na UI do n8n fixado, criar uma credencial de cada tipo e exportar (`export:credentials --decrypted`) para confirmar o tipo e os campos; atualizar a tabela do plan.md se divergir — INF-RF-04
       Arquivo: specs/006-n8n-infra/plan.md · Depende de: T006.01 · Pronto quando: os campos estão confirmados
 - [x] T006.04 TESTE: montarCredenciais(env) gera as 5 credenciais com IDs fixos, tipos e campos corretos, e usa placeholder + aviso quando falta variável — INF-RF-04
       Arquivo: tests/infra/render-credentials.test.ts · Depende de: T006.03 · Pronto quando: falha

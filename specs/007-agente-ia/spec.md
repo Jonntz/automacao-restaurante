@@ -42,7 +42,7 @@ Criar o "atendente virtual" que conversa em PT-BR, apresenta o cardápio, monta 
   - `consultar_pedidos`: `GET /api/bot/pedidos?telefone=`, também com o telefone vindo do gatilho.
   - Respostas 4xx e 5xx **voltam para o agente** como resultado da ferramenta, sem quebrar o workflow (opção "never error" / tratamento de resposta completa).
 - **IA-RF-06** — Nó Code "Montar mensagens" depois do agente:
-  - extrai o primeiro BR Code da resposta com a regex `/000201[^\n]*?6304[0-9A-Fa-f]{4}/`;
+  - extrai o BR Code da resposta com a regex `/000201[^\n]*6304[0-9A-Fa-f]{4}/` (gulosa, até o último CRC da linha);
   - devolve `mensagens = [textoSemOCodigo.trim(), codigo]`, ou `[texto]` quando não há código;
   - descarta mensagens vazias e trunca cada uma em 4096 caracteres (limite do WhatsApp).
 - **IA-RF-07** — Erro no agente (429 de cota, timeout, erro do modelo) segue pela saída de erro do nó e devolve `{ mensagens: ["Desculpe, tive um probleminha técnico agora. Pode mandar sua mensagem de novo em alguns instantes? 🙏"] }`.
@@ -82,3 +82,4 @@ O código do nó Code é testado de forma automática; os cenários de conversa,
 
 ## Histórico
 - 2026-10-16 — versão inicial. A regex de Pix foi trocada de `000201\S+` (do plano original) para uma versão sem quebra de linha que aceita espaços, porque o BR Code contém o nome do recebedor com espaços.
+- 2026-10-16 — A regex passou a ser gulosa (`[^\n]*`): a sequência "6304" pode aparecer dentro de um valor do código, e o CRC verdadeiro é sempre a última ocorrência. Os workflows são gerados como JSON e validados por testes estruturais; os campos de cada nó foram conferidos nas definições do `n8n-nodes-base` e do `@n8n/n8n-nodes-langchain` 2.43.2, as versões usadas pelo n8n 2.43.4.

@@ -1,0 +1,146 @@
+{
+  "id": "wfChatTesteDemo1",
+  "name": "Chat Teste (sem WhatsApp)",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "mode": "hostedChat",
+        "initialMessages": "Olá! 👋 Sou o atendente virtual do Burger Demo (modo teste).\nQuer ver o cardápio?",
+        "options": {
+          "title": "Burger Demo — teste do atendente",
+          "subtitle": "Conversa de teste: nada é enviado por WhatsApp.",
+          "inputPlaceholder": "Escreva sua mensagem…",
+          "responseMode": "lastNode"
+        }
+      },
+      "id": "1dccd602-21a8-5a28-9001-b5a814ce4caa",
+      "name": "Chat",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        300
+      ],
+      "webhookId": "6f1d6a43-8b5e-4f0a-9c3e-0b0d1e2f3a4b"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "wfAgenteRestaur1",
+          "mode": "id"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "telefone": "={{ 'teste:' + $json.sessionId }}",
+            "nome": "Cliente Teste",
+            "texto": "={{ $json.chatInput }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "telefone",
+              "displayName": "telefone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "nome",
+              "displayName": "nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "texto",
+              "displayName": "texto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "4aaf896e-af9d-5044-83ad-d27da8320520",
+      "name": "Chamar atendente",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b3f3bf12-a93a-5a23-bae8-dadea123886b",
+              "name": "output",
+              "value": "={{ $json.mensagens.join('\\n\\n') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "0a524437-1473-5796-9e75-629f965e8507",
+      "name": "Resposta",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Chat": {
+      "main": [
+        [
+          {
+            "node": "Chamar atendente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chamar atendente": {
+      "main": [
+        [
+          {
+            "node": "Resposta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}
