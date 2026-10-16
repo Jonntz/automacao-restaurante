@@ -10,7 +10,7 @@ Expor as regras de 002 e 003 em HTTP para o agente do n8n, com respostas **pensa
 - **H4.** Como restaurante, quero que só o meu n8n consiga usar essa API.
 
 ## Requisitos funcionais
-- **BOT-RF-01** — Todas as rotas `/api/bot/*` exigem o header `x-api-key` igual a `BOT_API_KEY`, com comparação timing-safe. Sem ele, ou com valor errado, a resposta é **401** `{ ok: false, erro: "Não autorizado" }`.
+- **BOT-RF-01** — Todas as rotas `/api/bot/*` exigem o header `x-api-key` igual a `BOT_API_KEY`, com comparação timing-safe. Sem ele, ou com valor errado, a resposta é **401** `{ ok: false, erro: "Não autorizado" }`. Se a `BOT_API_KEY` não estiver configurada no servidor, a resposta é **503** `{ ok: false, erro: "API do bot não configurada" }`, com um log explicando o motivo.
 - **BOT-RF-02** — `GET /api/bot/contexto?telefone=` devolve:
   - `restaurante`: nome, `lojaAberta`, horário, tempo estimado, taxa formatada e em centavos, `aceitaRetirada`, endereço de retirada;
   - `cardapioTexto` (PED-RF-02, só itens disponíveis);
@@ -35,7 +35,9 @@ Expor as regras de 002 e 003 em HTTP para o agente do n8n, com respostas **pensa
   - `itemId` e `quantidade` podem vir como string numérica;
   - aceita `item_id`, `id` e `itemId`; `qtd` e `quantidade`; `obs` e `observacao`;
   - `tipoEntrega` aceita `tipo_entrega` e maiúsculas;
-  - campos desconhecidos (como `preco`) são ignorados.
+  - campos desconhecidos (como `preco`) são ignorados;
+  - `quantidade` ausente vale 1;
+  - um único objeto em `itens`, fora de um array, é tratado como lista de um item.
 - **BOT-RF-08** — Corpo inválido (JSON quebrado ou campos obrigatórios ausentes) devolve **400** com `erros` que dizem o formato esperado, com exemplo.
 - **BOT-RF-09** — Erro inesperado devolve **500** `{ ok: false, erro: "Erro interno, tente novamente." }`, sem stack trace. O detalhe vai só para o log do servidor.
 - **BOT-RF-10** — O telefone sempre vem do chamador (o workflow) e nunca é inferido. O canal é derivado do telefone (PED-RF-11).
@@ -60,3 +62,4 @@ Rate limiting, versionamento da API, OpenAPI gerado automaticamente.
 
 ## Histórico
 - 2026-10-16 — versão inicial.
+- 2026-10-16 — Antes de implementar: quantidade padrão 1, item único sem array e 503 sem `BOT_API_KEY`.
