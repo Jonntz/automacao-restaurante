@@ -1,0 +1,16 @@
+{
+  "credenciais": {
+    "gemini": "credGeminiDemo01",
+    "whatsapp": "credWhatsappDem1",
+    "postgres": "credPostgresDem1",
+    "webhookInterno": "credWebhookIntr1",
+    "apiBot": "credApiBotDemo01"
+  },
+  "workflows": {
+    "agente-restaurante": "wfAgenteRestaur1",
+    "whatsapp-entrada": "wfWhatsappEntr01",
+    "chat-teste": "wfChatTesteDemo1",
+    "notificar-cliente": "wfNotificarClie1"
+  },
+  "chatTesteWebhookId": "6f1d6a43-8b5e-4f0a-9c3e-0b0d1e2f3a4b"
+}

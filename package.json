@@ -14,7 +14,14 @@
     "db:migrate": "tsx --env-file-if-exists=.env scripts/db-migrar.ts",
     "db:seed": "tsx --env-file-if-exists=.env scripts/db-seed.ts",
     "db:reset": "tsx --env-file-if-exists=.env scripts/db-reset.ts",
-    "e2e:admin": "node scripts/e2e-admin.mjs"
+    "e2e:admin": "node scripts/e2e-admin.mjs",
+    "infra:up": "docker compose up -d",
+    "infra:down": "docker compose down",
+    "infra:logs": "docker compose logs -f n8n-bootstrap n8n",
+    "infra:reset": "node -e \"console.log(String.fromCodePoint(9888)+'  Apagando volumes do n8n e do Postgres (workflows, credenciais e histórico de chat)...')\" && docker compose down -v && docker compose up -d",
+    "tunel:up": "docker compose --profile tunel up -d ngrok",
+    "n8n:import": "docker compose run --rm n8n-bootstrap && docker compose restart n8n",
+    "n8n:export": "tsx scripts/n8n-export.ts"
   },
   "dependencies": {
     "@libsql/client": "^0.18.0",

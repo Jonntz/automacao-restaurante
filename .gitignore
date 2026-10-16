@@ -35,3 +35,6 @@ local.db-*
 
 # screenshots do roteiro E2E
 .e2e/
+
+# export temporário do n8n
+.n8n-export/

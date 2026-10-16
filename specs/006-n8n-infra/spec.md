@@ -66,3 +66,5 @@ Fila do n8n (queue mode), runners externos, backup, HTTPS próprio para o n8n (o
 
 ## Histórico
 - 2026-10-16 — versão inicial (n8n 2.x: `publish:workflow` substitui `update:workflow --active`).
+- 2026-10-16 — Versões fixadas: n8n 2.43.4 (a `stable`, 2.43.7, saiu no mesmo dia; segui a mesma cautela de idade mínima do pnpm), `postgres:16-alpine` e `ngrok:3.39.11-alpine`. O bootstrap monta `./n8n` inteiro em `/projeto-n8n`.
+- 2026-10-16 — **Bloqueio de ambiente:** no macOS, o Docker Desktop travou ao iniciar o primeiro container com bind mount de `~/Documents`. Depois disso nenhum container novo iniciava, e nem o próprio Docker fechava. A hipótese é um pedido de permissão do macOS ("Docker quer acessar Documentos") esperando clique na tela. A verificação (T006.03, T006.06, T006.07, T006.10, T006.11) fica pendente até destravar.
