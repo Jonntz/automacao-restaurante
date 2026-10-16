@@ -54,6 +54,10 @@ Deixar a PoC **testável por outra pessoa**:
   - `$fromAI` mandando o corpo vazio;
   - Vercel Hobby comercial.
 - **ENT-RF-05** — `docs/verificacao-e2e.md`: roteiro consolidado com os CAs manuais das features 005, 007 e 008, mais as colunas data, ambiente, resultado e observações, preenchidas na execução final.
+- **ENT-RF-07** — `pnpm env:init` cria o `.env` a partir do `.env.example`:
+  - gera segredos aleatórios (sessão, chaves internas, senha do Postgres, chave do n8n, senha do admin);
+  - **nunca** sobrescreve um `.env` existente;
+  - mostra no terminal o login do painel.
 - **ENT-RF-06** — `CLAUDE.md` na raiz: como trabalhar neste repo (ler a constitution e a spec antes, marcar as tasks, atualizar a spec antes do código, comandos principais).
 
 ## Requisitos não funcionais
@@ -64,10 +68,11 @@ Deixar a PoC **testável por outra pessoa**:
 - **CA-01** — Dado um clone limpo, quando sigo só o Caminho rápido do README, então completo um pedido pelo Chat Teste e o vejo como "Pago" no admin depois de simular.
 - **CA-02** — Dado o roteiro E2E, então cada linha tem resultado registrado. As que dependem de credenciais externas ausentes ficam marcadas como "pendente de credenciais", com a instrução de como completar.
 - **CA-03** — Dado o comando de verificação final (ENT-RNF-01), então a saída é verde.
-- **CA-04** — Dado `git grep -nE "(sk_|EAAG|AIza|abc_dev_)"`, então nada é encontrado fora do `.env.example`, onde só há placeholders.
+- **CA-04** — Dada uma busca por padrões com o tamanho real de chaves (`AIza[0-9A-Za-z_-]{35}`, `EAA[A-Za-z0-9]{30,}`, `abc_(dev|prod)_[0-9A-Za-z]{16,}`, `sk_(live|test)_…`) nos arquivos versionados, então nada é encontrado, e `.env` e `local.db` não estão no git. Os testes usam valores falsos curtos, como `AIza-teste`, de propósito.
 
 ## Fora de escopo
 Vídeo de demonstração, site institucional, monitoramento.
 
 ## Histórico
 - 2026-10-16 — versão inicial.
+- 2026-10-16 — Incluído o ENT-RF-07 (`pnpm env:init`), para o caminho rápido não exigir gerar segredos à mão.

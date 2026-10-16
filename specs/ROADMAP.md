@@ -28,9 +28,9 @@ Legenda: ⬜ não iniciada · 🟨 em andamento · ✅ concluída · ⛔ bloquea
 | 006 | [n8n-infra](006-n8n-infra/tasks.md) | ⛔ | 7/11 | Código pronto; verificação bloqueada: Docker Desktop travado (ver Histórico da spec) |
 | 007 | [agente-ia](007-agente-ia/tasks.md) | ⛔ | 8/10 | Workflows + testes estruturais prontos; T007.07/T007.10 precisam de Docker + `GEMINI_API_KEY` |
 | 008 | [whatsapp](008-whatsapp/tasks.md) | ⛔ | 13/15 | Gateway + workflows + guia prontos; T008.13 precisa de Docker, T008.15 de app Meta + ngrok |
-| 009 | [entrega-poc](009-entrega-poc/tasks.md) | 🟨 | 1/10 | CLAUDE.md criado na Etapa 1 |
+| 009 | [entrega-poc](009-entrega-poc/tasks.md) | ⛔ | 9/11 | Docs, `env:init` e verificação estática prontos; T009.09 (caminho rápido do zero) precisa de Docker + `GEMINI_API_KEY`; T009.10 fecha depois |
 
-**Total:** 130/147 tarefas.
+**Total:** 138/148 tarefas.
 
 ## Credenciais externas (o usuário providencia)
 
