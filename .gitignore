@@ -26,3 +26,9 @@ local.db-*
 
 # n8n export temporário
 .n8n-export/
+
+# vercel / certificados
+.vercel
+*.pem
+.pnp
+.pnp.*

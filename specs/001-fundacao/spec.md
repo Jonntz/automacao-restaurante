@@ -62,3 +62,4 @@ CI/CD, Docker para o Next.js, i18n.
 
 ## Histórico
 - 2026-10-16 — versão inicial.
+- 2026-10-16 — Implementada. O Next foi fixado na 16.4.1 porque a 16.4.2, publicada há menos de 1 dia, foi barrada pela política `minimumReleaseAge` do pnpm 11. O projeto usa Cache Components, ligado por padrão no template (ver plan.md). O script `typecheck` roda `next typegen` antes do `tsc`, porque os tipos globais `LayoutProps`/`PageProps` são gerados.

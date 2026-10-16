@@ -33,7 +33,7 @@ docs/setup-meta-whatsapp.md
   - `processarWebhookWhatsapp(getDb(), …)` faz assinatura → parse → dedup e devolve as mensagens a encaminhar;
   - `after(() => encaminharParaN8n(...))`;
   - `return Response.json({ ok: true })`;
-  - `export const runtime = 'nodejs'`, porque usa `node:crypto`.
+  - **sem** `export const runtime`, que o Next 16 proíbe com Cache Components. O runtime já é Node, então `node:crypto` funciona.
 - **Dedup antes de encaminhar:** `insert … onConflictDoNothing().returning()`. Se nada voltou, a mensagem já tinha sido vista. A escolha deliberada é "no máximo uma vez": se o n8n falhar depois, aquela mensagem fica sem resposta, mas o cliente pode repetir. É melhor do que responder em dobro.
 - **Timestamp da Meta:** vem em segundos e em string; é convertido com `Number(ts) * 1000`.
 - **`WHATSAPP_*` do Next em env.ts:** o grupo `env.whatsapp()` exige `WHATSAPP_VERIFY_TOKEN` e `WHATSAPP_APP_SECRET`. Se faltarem, a rota responde 503 com um log claro, sem quebrar o resto do app.
