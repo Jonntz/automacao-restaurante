@@ -140,6 +140,24 @@ describe("pizzaria e marca (MRC-RF-06, MRC-RF-09)", () => {
     expect(css).not.toMatch(/^\.chat-header\s*\{/m);
   });
 
+  it("CA-13: prompt pede um item por linha e linha em branco entre categorias", () => {
+    expect(prompt).toMatch(/cada item em sua própria linha/);
+    expect(prompt).toMatch(/linha em branco entre categorias/);
+  });
+
+  it("CA-13: resposta do Chat Teste vira quebra Markdown em cada linha (o chat usa breaks: false)", () => {
+    const chat = carregarWorkflow("chat-teste");
+    const atribuicao = (acharNo(chat, "Resposta").parameters.assignments as { assignments: { name: string; value: string }[] })
+      .assignments.find((a) => a.name === "output")!;
+    const codigo = /^=\{\{([\s\S]*)\}\}$/.exec(atribuicao.value)![1];
+    const avaliar = (mensagens: string[]) => new Function("$json", `return (${codigo});`)({ mensagens }) as string;
+    expect(avaliar(["*Pizzas*\n• Mussarela — R$ 49,90\n• Calabresa — R$ 52,90"])).toBe(
+      "*Pizzas*  \n• Mussarela — R$ 49,90  \n• Calabresa — R$ 52,90",
+    );
+    // mensagens separadas continuam como parágrafos (linha em branco entre elas)
+    expect(avaliar(["Pedido #0001 criado!", "000201…6304ABCD"])).toBe("Pedido #0001 criado!\n\n000201…6304ABCD");
+  });
+
   it("compose entrega APP_URL ao n8n", () => {
     expect(lerArquivo("docker-compose.yml")).toContain("APP_URL: ${APP_URL:-http://localhost:3000}");
   });

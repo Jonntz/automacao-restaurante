@@ -22,6 +22,7 @@ Criar o "atendente virtual" que conversa em PT-BR, apresenta o cardápio, monta 
   - no máximo 6 iterações por mensagem.
 - **IA-RF-04** — O system prompt fica versionado em `n8n/prompts/atendente.md` (fonte da verdade) e é copiado no workflow. Ele contém:
   - **Persona:** atendente do restaurante; frases curtas e simpáticas, no máximo um emoji por mensagem; formatação do WhatsApp (`*negrito*`, listas com `•`).
+  - **Cardápio:** cada item em sua própria linha (`• Nome — R$ 0,00`), título da categoria em linha própria e uma linha em branco entre categorias; nunca vários itens na mesma linha.
   - **Escopo:** só cardápio, pedidos e status. Fora disso, o agente informa educadamente que só ajuda com pedidos.
   - **Fluxo de pedido:**
     1. entender os itens, usando **apenas** IDs do cardápio;
@@ -50,7 +51,7 @@ Criar o "atendente virtual" que conversa em PT-BR, apresenta o cardápio, monta 
 - **IA-RF-08** — Workflow **"Chat Teste"** (publicado):
   - Chat Trigger público em modo hosted chat, com mensagem inicial "Olá! 👋 Bem-vindo à Container Lanches 🍕 Sou o atendente virtual (modo teste). Quer ver o cardápio de pizzas?" e a identidade visual da feature 010 (MRC-RF-06);
   - chama o agente com `telefone = "teste:" + sessionId`, `nome = "Cliente Teste"`, `texto = chatInput`;
-  - devolve `output = mensagens.join("\n\n")`.
+  - devolve `output = mensagens.join("\n\n")`, com cada quebra simples convertida em quebra Markdown (`"  \n"`). O chat do n8n renderiza Markdown com `breaks: false`, e sem a conversão as linhas com "•" se juntariam num parágrafo só; com ela, o Chat Teste mostra as linhas como o WhatsApp.
 - **IA-RF-09** — Script `pnpm smoke` (`scripts/smoke-chat.ts`):
   - envia uma conversa roteirizada ao webhook do Chat Teste;
   - imprime as respostas;
@@ -77,6 +78,9 @@ O código do nó Code é testado de forma automática; os cenários de conversa,
 - **CA-10 (manual)** — Com a loja fechada no admin: o agente informa o horário e não cria o pedido.
 - **CA-11 (manual)** — "Já paguei, cadê meu pedido?", depois de simular o pagamento: o agente informa "Pago".
 - **CA-12 (manual)** — Com a chave do Gemini inválida: chega a mensagem de fallback, e o workflow não quebra.
+- **CA-13** — "Qual o cardápio?":
+  - (auto) a resposta do Chat Teste converte `"• A\n• B"` em linhas separadas e mantém o parágrafo entre mensagens;
+  - (manual) no navegador, cada pizza aparece em sua própria linha, agrupada por categoria.
 
 ## Fora de escopo
 Áudio (transcrição), imagens do cardápio, sugestões proativas (upsell), atendimento humano (handoff), vários idiomas.
@@ -88,3 +92,4 @@ O código do nó Code é testado de forma automática; os cenários de conversa,
 - 2026-10-16 — Com o `gemini-flash-latest` em 503 por alta demanda mesmo depois do retry, foi incluído o modelo reserva `gemini-flash-lite-latest` (*Fallback Model* do AI Agent v3.1), também testado com chamada de ferramenta.
 - 2026-10-16 — A cota real do free tier é **por modelo e por dia**: o `gemini-3.8-flash` (por trás do `gemini-flash-latest`) devolveu 429 com `limit: 20` (`GenerateRequestsPerDayPerProjectPerModel-FreeTier`). Os modelos Flash-Lite têm cerca de 500 por dia, segundo guias de set/2026. Os padrões passaram a ser `gemini-flash-lite-latest` (principal) e `gemini-3.1-flash-lite` (reserva), ambos testados com chamada de ferramenta.
 - 2026-10-22 — Feature 010: o seed demo virou a pizzaria Container Lanches. O CA-06 passou para os valores de pizza, o prompt ganhou regras de tamanho, meio a meio e borda (MRC-RF-09), e o Chat Teste ganhou a identidade visual (MRC-RF-06).
+- 2026-10-22 — Pedido do usuário: quebras de linha ao mostrar o cardápio. A causa no Chat Teste era o Markdown com `breaks: false`: linhas com "•" se juntavam. Entraram a regra de formatação do cardápio no prompt e a conversão de quebras na resposta do Chat Teste (IA-RF-04, IA-RF-08, CA-13).

@@ -18,5 +18,7 @@
       Arquivo: scripts/smoke-chat.ts, package.json · Depende de: T007.06 · Pronto quando: roda e informa o resultado
 - [x] T007.09 DOC: docs/setup-gemini.md (criar a chave no AI Studio, escolher o modelo, limites do free tier, aviso de uso dos dados, como trocar para Groq) — IA-RNF-03
       Arquivo: docs/setup-gemini.md · Depende de: — · Pronto quando: um passo a passo reproduzível
+- [x] T007.11 TESTE+IMPL: cardápio com quebras de linha (regra no prompt + conversão para quebra Markdown no Chat Teste) — IA-RF-04, IA-RF-08, CA-13
+      Arquivo: n8n/prompts/atendente.md, n8n/workflows/{agente-restaurante,chat-teste}.json, tests/n8n/agente-restaurante.test.ts · Depende de: T007.06 · Pronto quando: teste da expressão passa e o cardápio aparece linha a linha no navegador
 - [x] T007.10 VERIF: cenários manuais CA-05…CA-12 no Chat Teste, com o resultado de cada um registrado em docs/verificacao-e2e.md; ajustar o prompt e reexportar quando necessário; ROADMAP; commit `feat(007)` — IA-RNF-01, IA-RNF-02
       Depende de: todas · Pronto quando: todos os cenários passam (CA-12 com a chave inválida temporariamente)

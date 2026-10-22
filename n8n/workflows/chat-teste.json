@@ -96,7 +96,7 @@
             {
               "id": "b3f3bf12-a93a-5a23-bae8-dadea123886b",
               "name": "output",
-              "value": "={{ $json.mensagens.join('\\n\\n') }}",
+              "value": "={{ $json.mensagens.join('\\n\\n').replace(/([^\\n])\\n(?=[^\\n])/g, '$1  \\n') }}",
               "type": "string"
             }
           ]

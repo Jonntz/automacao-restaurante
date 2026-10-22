@@ -26,12 +26,12 @@ Legenda: ⬜ não iniciada · 🟨 em andamento · ✅ concluída · ⛔ bloquea
 | 004 | [api-do-bot](004-api-do-bot/tasks.md) | ✅ | 13/13 | Verificado com curl contra o dev server |
 | 005 | [painel-admin](005-painel-admin/tasks.md) | ✅ | 23/23 | `pnpm e2e:admin` verde; 3 defeitos de UI corrigidos |
 | 006 | [n8n-infra](006-n8n-infra/tasks.md) | 🟨 | 10/11 | Verificada em Docker (Postgres 17, n8n 2.43.4); falta T006.07 (ngrok), que precisa de `NGROK_*` |
-| 007 | [agente-ia](007-agente-ia/tasks.md) | ✅ | 10/10 | CA-05…CA-12 ao vivo; Flash-Lite como principal + reserva (cota por modelo) |
+| 007 | [agente-ia](007-agente-ia/tasks.md) | ✅ | 11/11 | CA-05…CA-12 ao vivo; Flash-Lite como principal + reserva (cota por modelo) |
 | 008 | [whatsapp](008-whatsapp/tasks.md) | 🟨 | 14/15 | Gateway → n8n → agente verificado; falta T008.15 (celular real), que precisa do app Meta + ngrok |
 | 009 | [entrega-poc](009-entrega-poc/tasks.md) | ✅ | 11/11 | Caminho rápido do zero em 106 s; tag `poc-v0.1` |
 | 010 | [marca-e-pizzaria](010-marca-e-pizzaria/tasks.md) | ✅ | 13/13 | Tema claro/escuro com switch, Chat Teste com a marca, seed de pizzaria com meio a meio |
 
-**Total:** 160/162 tarefas. As 2 restantes dependem só de credenciais externas (ngrok e app Meta).
+**Total:** 161/163 tarefas. As 2 restantes dependem só de credenciais externas (ngrok e app Meta).
 
 ## Credenciais externas (o usuário providencia)
 

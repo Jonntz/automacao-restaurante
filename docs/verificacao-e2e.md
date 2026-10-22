@@ -76,6 +76,7 @@ Defeitos encontrados e corrigidos na subida real:
 | CA-11 | "Já paguei" depois de simular no painel → "Pago" | ✅ | Informa o `statusTexto` exato (regra incluída no prompt) |
 | CA-12 | Chave do Gemini inválida → mensagem de fallback | ✅ | Chave falsa temporária, depois restaurada |
 | RNF-02 | Resposta típica < 10 s | ✅ | Mediana de ~9 s (5–19 s) no Flash-Lite |
+| CA-13 | "Qual o cardápio?" → um item por linha, categorias separadas | ✅ 2026-10-22 | Causa: o chat do n8n usa Markdown com `breaks: false`. Após a correção, 2 sessões com 23 linhas de preço cada, nenhuma linha com 2 itens, 23 `<br>` renderizados |
 
 Defeitos e ajustes encontrados ao vivo:
 - o `gemini-2.5-flash` responde 404 para usuários novos;
