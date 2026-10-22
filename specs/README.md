@@ -27,6 +27,7 @@ Este diretório é a **fonte da verdade** do projeto. Usamos Spec-Driven Develop
 | 007 | [agente-ia](007-agente-ia/spec.md) | IA | Agente Gemini no n8n e o Chat Teste |
 | 008 | [whatsapp](008-whatsapp/spec.md) | WPP | Gateway do webhook da Meta, entrada e envio de mensagens |
 | 009 | [entrega-poc](009-entrega-poc/spec.md) | ENT | README, guias, deploy, troubleshooting, verificação E2E |
+| 010 | [marca-e-pizzaria](010-marca-e-pizzaria/spec.md) | MRC | Identidade visual Container Lanches (claro/escuro) e cardápio de pizzaria |
 
 ## Convenções
 
