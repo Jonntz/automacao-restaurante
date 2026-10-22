@@ -23,9 +23,10 @@ async function EstadoLoja() {
 
 export default function LayoutAdmin({ children }: LayoutProps<"/admin">) {
   return (
-    <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur">
-        <div className="mx-auto flex min-h-14 max-w-[1600px] flex-wrap items-center gap-x-3 gap-y-2 px-4 py-2">
+    // Altura exata da tela (ADM-RF-06): cabeçalho fixo e conteúdo rolando por dentro do <main>.
+    <div className="flex h-dvh flex-col">
+      <header className="z-10 shrink-0 border-b bg-background">
+        <div className="flex min-h-14 flex-wrap items-center gap-x-3 gap-y-2 px-4 py-2">
           <Link href="/admin/pedidos" aria-label="Container Lanches — pedidos">
             <Marca />
           </Link>
@@ -45,7 +46,7 @@ export default function LayoutAdmin({ children }: LayoutProps<"/admin">) {
         {/* filete com o gradiente laranja do wordmark */}
         <div aria-hidden className="h-1 bg-[image:var(--marca-gradiente)]" />
       </header>
-      <main className="flex-1">{children}</main>
+      <main className="min-h-0 flex-1 overflow-y-auto">{children}</main>
     </div>
   );
 }

@@ -85,8 +85,8 @@ export function Kanban() {
     ultimaAtualizacao && agora ? Math.max(0, Math.round((agora.getTime() - ultimaAtualizacao) / 1000)) : null;
 
   return (
-    <div className="flex flex-col gap-4 p-4">
-      <div className="flex flex-wrap items-center gap-3">
+    <div className="flex h-full min-h-0 flex-col gap-4 p-4">
+      <div className="flex shrink-0 flex-wrap items-center gap-3">
         <h1 className="text-3xl uppercase">Pedidos</h1>
         <span className="text-xs text-muted-foreground">
           {segundos === null ? "Carregando…" : `Atualizado há ${segundos}s`}
@@ -102,27 +102,37 @@ export function Kanban() {
         </div>
       </div>
 
-      <div className="flex gap-4 overflow-x-auto pb-4">
+      {/* 100% da tela (ADM-RF-06): ≥ 1280px as 5 colunas dividem a largura; abaixo, rolagem
+          horizontal (no celular, ~88% por coluna com encaixe). Os cards rolam dentro de cada coluna. */}
+      <div className="flex min-h-0 flex-1 snap-x snap-mandatory gap-4 overflow-x-auto pb-2 xl:grid xl:snap-none xl:grid-cols-5 xl:grid-rows-1 xl:overflow-x-visible">
         {agora &&
           (estado?.colunas ?? []).map((coluna) => (
-          <section key={coluna.id} className="flex w-72 shrink-0 flex-col gap-3 rounded-xl bg-muted/50 p-3">
-            <header className="flex items-center justify-between">
-              <h2 className="text-base uppercase">{coluna.titulo}</h2>
-              <Badge variant="secondary">{coluna.pedidos.length}</Badge>
-            </header>
-            {coluna.pedidos.length === 0 && <p className="py-6 text-center text-xs text-muted-foreground">Nenhum pedido</p>}
-            {coluna.pedidos.map((pedido) => (
-              <CardPedido
-                key={pedido.id}
-                pedido={pedido}
-                agora={agora}
-                destacado={(destaques.get(pedido.id) ?? 0) > agora.getTime()}
-                aoAbrir={() => setAberto(pedido.id)}
-                aoAlterar={() => void recarregar()}
-              />
-            ))}
-          </section>
-        ))}
+            <section
+              key={coluna.id}
+              className="flex w-[88vw] shrink-0 snap-start flex-col gap-3 rounded-xl bg-muted/50 p-3 sm:w-72 xl:w-auto xl:min-w-0"
+            >
+              <header className="flex shrink-0 items-center justify-between">
+                <h2 className="text-base uppercase">{coluna.titulo}</h2>
+                <Badge variant="secondary">{coluna.pedidos.length}</Badge>
+              </header>
+              {/* *:shrink-0: os cards não encolhem (a lista rola); -m-1 p-1: folga para o anel de destaque */}
+              <div className="-m-1 flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-1 *:shrink-0">
+                {coluna.pedidos.length === 0 && (
+                  <p className="py-6 text-center text-xs text-muted-foreground">Nenhum pedido</p>
+                )}
+                {coluna.pedidos.map((pedido) => (
+                  <CardPedido
+                    key={pedido.id}
+                    pedido={pedido}
+                    agora={agora}
+                    destacado={(destaques.get(pedido.id) ?? 0) > agora.getTime()}
+                    aoAbrir={() => setAberto(pedido.id)}
+                    aoAlterar={() => void recarregar()}
+                  />
+                ))}
+              </div>
+            </section>
+          ))}
       </div>
 
       <DetalhesPedido pedido={pedidoAberto} aoFechar={() => setAberto(null)} />

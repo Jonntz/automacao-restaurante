@@ -47,6 +47,8 @@
       Arquivo: src/app/admin/cardapio/* · Depende de: T005.19 · Pronto quando: CA-07/CA-08 verificados manualmente
 
 ## Fechamento
+- [x] T005.24 TESTE+IMPL: kanban ocupando 100% da tela de forma responsiva (layout em altura de tela, 5 colunas iguais ≥ 1280 px, rolagem interna, snap no celular; cabeçalho na largura toda) — ADM-RF-06, CA-12
+      Arquivo: scripts/e2e-admin.mjs, src/app/admin/layout.tsx, src/app/admin/pedidos/kanban.tsx · Depende de: T005.14 · Pronto quando: e2e mede as colunas em 1920, 1280 e 390 px
 - [x] T005.23 TESTE+IMPL: diálogo de item sem transbordar com nome de categoria longo (e2e mede os limites em 1400 px e 390 px; grid com `min-w-0` e valor do Select truncado) — CA-11, ADM-RNF-01
       Arquivo: scripts/e2e-admin.mjs, src/app/admin/cardapio/formularios.tsx · Depende de: T005.20 · Pronto quando: e2e falha antes da correção e passa depois
 - [x] T005.22 IMPL: scripts/e2e-admin.mjs + `pnpm e2e:admin` (playwright-core + Chrome do sistema; telefone `teste:`; limpa o item criado; screenshots em `.e2e/`) — ADM-RNF-04

@@ -34,6 +34,14 @@ Dar ao restaurante uma tela para acompanhar e mover os pedidos em tempo quase re
   | Saiu / Pronto | `saiu_para_entrega`, `pronto_para_retirada` |
   | Concluídos hoje | `entregue`, `cancelado` |
 
+  **Layout responsivo (100% da tela):**
+  - o painel ocupa a altura da janela, com o cabeçalho fixo no topo e o conteúdo abaixo;
+  - no kanban, cada coluna tem a altura disponível, com os cards rolando por dentro e o título da coluna sempre visível;
+  - **≥ 1280 px:** as 5 colunas dividem 100% da largura em partes iguais, sem sobra lateral;
+  - **640–1279 px:** colunas de 18rem, com rolagem horizontal só no kanban;
+  - **< 640 px:** cada coluna ocupa ~88% da largura, com rolagem horizontal que encaixa coluna a coluna;
+  - o cabeçalho usa a largura toda, alinhado ao kanban.
+
   Dentro da coluna, os mais antigos vêm primeiro.
 - **ADM-RF-07** — O kanban se atualiza por **polling a cada 5 s**, sem recarregar a página, e mostra um indicador "atualizado há Xs".
 - **ADM-RF-08** — Quando aparece um pedido novo em "Pagos — novos", o card ganha destaque visual por 30 s. Se o som estiver ativado, toca um bipe (Web Audio). O som começa desligado; um botão "Ativar som" respeita a política de autoplay do navegador.
@@ -76,6 +84,9 @@ Dar ao restaurante uma tela para acompanhar e mover os pedidos em tempo quase re
 - **CA-08** — Dado que desligo a disponibilidade de X-Bacon, quando o bot revisa um pedido com X-Bacon, então recebe o erro de indisponível.
 - **CA-09** — Dado que fecho a loja, quando o bot tenta criar um pedido, então recebe `LOJA_FECHADA`.
 - **CA-10** — Dados dois cliques rápidos em "Iniciar preparo", então apenas uma transição acontece e o segundo clique recebe uma mensagem amigável.
+- **CA-12** — Dado o kanban:
+  - em 1920×1080 e 1280×800, as 5 colunas têm a mesma largura e juntas ocupam toda a largura útil (sem sobra à direita), vão até o fim da janela, a página não rola na vertical, e nenhum card fica espremido (a lista de cards rola);
+  - em 390 px, cada coluna tem ~88% da largura da tela.
 - **CA-11** — Dada uma categoria de nome longo (ex.: "Pizzas Tradicionais — Grande, 8 fatias"), quando edito um item em 1400 px ou 390 px, então nenhum campo do diálogo ultrapassa a caixa, e o nome da categoria é truncado com reticências.
 
 ## Fora de escopo
@@ -90,3 +101,4 @@ Vários usuários ou perfis, edição de configurações além do switch da loja
 
   Incluído o ADM-RNF-04 (E2E automatizado), porque o usuário pediu explicitamente uma PoC testável.
 - 2026-10-22 — Defeito relatado pelo usuário: com os nomes longos de categoria da pizzaria, o seletor de categoria do diálogo "Editar item" ultrapassava a caixa. A causa era a célula de grid sem `min-w-0` mais o `whitespace-nowrap` do SelectTrigger. Incluído o CA-11, verificado no `e2e:admin`.
+- 2026-10-22 — Pedido do usuário: as colunas do kanban devem ocupar 100% da tela de forma responsiva. Antes, as colunas tinham largura fixa (288 px), sobrava espaço à direita em telas largas e o cabeçalho ficava limitado a 1600 px. Incluídos o layout responsivo no ADM-RF-06 e o CA-12.

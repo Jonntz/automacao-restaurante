@@ -35,6 +35,7 @@ Este é o registro das verificações manuais e automatizadas de ponta a ponta. 
 | CA-10 | Duplo clique em "Iniciar preparo" → só uma transição | ✅ | Coberto por teste de domínio (lock otimista). Na UI, o botão desabilita durante a ação |
 | ADM-RNF-01 | 768 px e 390 px sem rolagem horizontal da página | ✅ | Defeito encontrado e corrigido: o cabeçalho transbordava em 390 px |
 | CA-11 | Diálogo "Editar item" com categoria de nome longo cabe na caixa (1400 px e 390 px) | ✅ 2026-10-22 | Defeito relatado pelo usuário e corrigido: célula do grid sem `min-w-0`; diálogo mais largo no desktop e campos empilhados no celular |
+| CA-12 | Kanban ocupa 100% da tela: 5 colunas iguais em 1920 e 1280 px, sem rolagem vertical da página, colunas até o rodapé; 88% da largura com snap em 390 px; nenhum card espremido | ✅ 2026-10-22 | Pedido do usuário. A lista de cada coluna rola por dentro (`*:shrink-0` evita cards cortados, regressão pega pelo próprio e2e) |
 
 ---
 

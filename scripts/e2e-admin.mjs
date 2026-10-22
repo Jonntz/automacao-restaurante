@@ -211,6 +211,63 @@ async function dialogoDeItemCabe(rotulo) {
   if (fora.length) throw new Error(`campos fora da caixa: ${fora.map((c) => `${c.slot} (direita ${Math.round(c.right)} > ${Math.round(caixa.x + caixa.width)})`).join(", ")}`);
 }
 
+async function medirKanban(largura, altura) {
+  await page.setViewportSize({ width: largura, height: altura });
+  await page.goto(`${BASE}/admin/pedidos`);
+  await coluna("Aguardando pagamento").waitFor();
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: path.join(PASTA, `kanban-${largura}x${altura}.png`) });
+  return page.evaluate(() => {
+    const colunas = [...document.querySelectorAll("section")].filter((s) => s.querySelector("h2"));
+    const caixa = colunas[0].parentElement.getBoundingClientRect();
+    return {
+      caixa: { left: caixa.left, right: caixa.right, width: caixa.width },
+      colunas: colunas.map((c) => c.getBoundingClientRect().toJSON()),
+      largura: window.innerWidth,
+      altura: window.innerHeight,
+      alturaPagina: document.documentElement.scrollHeight,
+      // cards espremidos: conteúdo maior que a caixa visível (a lista deve rolar, não encolher os cards)
+      cardsCortados: colunas.flatMap((c) => [...c.querySelectorAll('[data-slot="card"]')]).filter((card) => card.scrollHeight - card.clientHeight > 1).length,
+    };
+  });
+}
+
+// CA-12 (005): kanban ocupa 100% da tela de forma responsiva
+for (const [largura, altura] of [
+  [1920, 1080],
+  [1280, 800],
+]) {
+  try {
+    const m = await medirKanban(largura, altura);
+    const larguras = m.colunas.map((c) => c.width);
+    const problemas = [];
+    if (m.colunas.length !== 5) problemas.push(`${m.colunas.length} colunas`);
+    if (Math.max(...larguras) - Math.min(...larguras) > 2) problemas.push(`larguras diferentes (${larguras.map(Math.round).join("/")})`);
+    const sobraDireita = m.caixa.right - m.colunas.at(-1).right;
+    if (sobraDireita > 2) problemas.push(`sobra ${Math.round(sobraDireita)}px à direita das colunas`);
+    if (m.largura - m.caixa.width > 48) problemas.push(`kanban usa só ${Math.round(m.caixa.width)} de ${m.largura}px`);
+    if (m.alturaPagina > m.altura + 1) problemas.push(`página rola na vertical (${m.alturaPagina} > ${m.altura})`);
+    const faltaEmbaixo = m.altura - Math.max(...m.colunas.map((c) => c.bottom));
+    if (faltaEmbaixo > 40) problemas.push(`colunas terminam ${Math.round(faltaEmbaixo)}px antes do fim da janela`);
+    if (m.cardsCortados) problemas.push(`${m.cardsCortados} card(s) espremido(s) com conteúdo cortado`);
+    if (problemas.length) throw new Error(problemas.join("; "));
+    ok("CA-12", `kanban @${largura}x${altura}: 5 colunas iguais de ${Math.round(larguras[0])}px ocupando a largura e a altura`);
+  } catch (e) {
+    falha("CA-12", `kanban @${largura}x${altura}`, e);
+  }
+}
+try {
+  const m = await medirKanban(390, 844);
+  const proporcao = m.colunas[0].width / m.largura;
+  if (Math.abs(proporcao - 0.88) > 0.03) throw new Error(`coluna com ${Math.round(proporcao * 100)}% da largura`);
+  if (m.alturaPagina > m.altura + 1) throw new Error(`página rola na vertical (${m.alturaPagina} > ${m.altura})`);
+  if (m.cardsCortados) throw new Error(`${m.cardsCortados} card(s) espremido(s) com conteúdo cortado`);
+  ok("CA-12", `kanban @390px: cada coluna com ${Math.round(proporcao * 100)}% da tela, rolagem lateral`);
+} catch (e) {
+  falha("CA-12", "kanban @390px", e);
+}
+await page.setViewportSize({ width: 1400, height: 900 });
+
 try {
   await dialogoDeItemCabe("1400");
   ok("CA-11", "diálogo de item com categoria longa cabe na caixa @1400px");
