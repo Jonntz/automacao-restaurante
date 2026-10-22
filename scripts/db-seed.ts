@@ -7,7 +7,7 @@ async function main() {
   const { db, client } = await criarDb(DATABASE_URL, DATABASE_AUTH_TOKEN);
   await seedDemo(db);
   client.close();
-  console.log("✔ Seed do Burger Demo aplicado (idempotente)");
+  console.log("✔ Seed demo da Container Lanches aplicado (idempotente)");
 }
 
 main().catch((erro) => {
