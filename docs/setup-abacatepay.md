@@ -1,6 +1,6 @@
 # Configurar o Pix real em sandbox (AbacatePay, modo dev)
 
-Por padrão, a PoC usa o provedor **`mock`**: ele gera um copia-e-cola fictício e o botão "Simular pagamento" confirma na hora. Com o **AbacatePay em Dev mode**, o Pix passa a ser gerado pela API real, sem dinheiro de verdade, e a confirmação chega pelo webhook.
+Por padrão, a PoC usa o provedor **`mock`**: ele gera um copia-e-cola fictício e o botão "Simular pagamento" confirma na hora. O código do mock **não é pagável**: a chave Pix dele (`mock@pix.invalid`) usa um domínio reservado que não pode existir, então qualquer app de banco recusa, e nenhum dinheiro sai da conta. Com o **AbacatePay em Dev mode**, o Pix passa a ser gerado pela API real, sem dinheiro de verdade, e a confirmação chega pelo webhook.
 
 > A integração usa a **API v2** (`/v2/transparents/*`), conferida na documentação oficial em 2026-10-16: <https://docs.abacatepay.com>.
 

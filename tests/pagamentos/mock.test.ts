@@ -23,6 +23,11 @@ describe("provedor mock (PAG-RF-03)", () => {
     expect(c.copiaECola.startsWith("000201")).toBe(true);
     expect(c.copiaECola).toContain("540549.90");
     expect(c.copiaECola).toContain("5917CONTAINER LANCHES");
+    // chave Pix (campo 26, subcampo 01) num domínio reservado: nunca pode existir de verdade (PAG-RF-03)
+    const chave = /0014br\.gov\.bcb\.pix01(\d{2})/.exec(c.copiaECola);
+    expect(chave).not.toBeNull();
+    const inicio = chave!.index + chave![0].length;
+    expect(c.copiaECola.slice(inicio, inicio + Number(chave![1]))).toBe("mock@pix.invalid");
     expect(c.copiaECola).toMatch(/6304[0-9A-F]{4}$/);
     const semCrc = c.copiaECola.slice(0, -4);
     expect(crc16Ccitt(semCrc)).toBe(c.copiaECola.slice(-4));

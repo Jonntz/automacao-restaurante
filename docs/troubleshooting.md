@@ -101,6 +101,13 @@ Cada problema está no formato **sintoma → causa → solução**. Os guias de 
 
 ## Pagamento
 
+### Mudei o provedor de pagamento (código ou `.env`) e nada mudou
+- **Causa:** o provedor fica guardado em `globalThis`, para o estado do mock sobreviver ao hot reload do `pnpm dev`.
+- **Solução:** reinicie o `pnpm dev`. Cobranças pendentes do mock criadas antes do reinício ficam sem estado, mas o botão **Simular pagamento** continua funcionando.
+
+### Posso pagar o código Pix do mock com o app do banco?
+- **Não, e nenhum dinheiro sai da conta.** A chave Pix do mock é `mock@pix.invalid`, num domínio reservado que não pode existir, e o banco recusa o código. Use o botão **Simular pagamento** do painel.
+
 ### Paguei, mas o pedido não sai de "Aguardando pagamento"
 - **Solução:** clique em **Verificar** no card. O sistema consulta o provedor. Sem webhook configurado, esse é o caminho, ou então o cliente perguntar "já paguei?" ao bot.
 

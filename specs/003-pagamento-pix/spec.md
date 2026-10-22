@@ -22,6 +22,7 @@ Gerar a cobrança Pix de cada pedido e confirmar o pagamento de forma **confiáv
   - `abacatepay` exige `ABACATEPAY_API_KEY`; sem ela, falha na inicialização com mensagem clara.
 - **PAG-RF-03** — Provedor **mock**:
   - gera um `provedorId` `mock_<uuid>` e um copia-e-cola fictício que **começa com `000201`** e **termina com `6304` + 4 hex**, no formato BR Code, para exercitar a separação do Pix no n8n;
+  - a chave Pix dentro do código usa um domínio **reservado e impossível de registrar** (`mock@pix.invalid`, TLD `.invalid` da RFC 2606). Nenhuma chave real pode coincidir, então um app de banco sempre recusa o código, e não há risco de pagamento acidental para terceiros;
   - guarda o estado em memória (sobrevive ao HMR via `globalThis`);
   - `simularPagamento` marca o pagamento como pago; `permiteSimulacao = true`.
 - **PAG-RF-04** — Provedor **AbacatePay** (API v2, `https://api.abacatepay.com/v2`, `Authorization: Bearer`):
@@ -80,7 +81,7 @@ Gerar a cobrança Pix de cada pedido e confirmar o pagamento de forma **confiáv
 - **PAG-RNF-02** — Os testes do AbacatePay usam `fetch` falso; nenhum teste automatizado chama a rede.
 
 ## Critérios de aceite
-- **CA-01** — Dado o provedor mock, quando garanto a cobrança de um pedido, então gravo um pagamento `pendente` com copia-e-cola `000201…6304XXXX` e expiração de 30 min. Chamar de novo devolve o **mesmo** pagamento sem criar outro.
+- **CA-01** — Dado o provedor mock, quando garanto a cobrança de um pedido, então gravo um pagamento `pendente` com copia-e-cola `000201…6304XXXX` e expiração de 30 min, cuja chave Pix termina em `.invalid`. Chamar de novo devolve o **mesmo** pagamento sem criar outro.
 - **CA-02** — Dada uma cobrança vencida, quando garanto a cobrança, então a antiga vira `expirado` e uma nova é criada.
 - **CA-03** — Dado o fetch falso do AbacatePay, quando crio uma cobrança, então o corpo enviado tem `method: "PIX"`, `amount` igual ao total do pedido e `expiresIn: 1800`, e o header leva o Bearer.
 - **CA-04** — Dado o AbacatePay respondendo 401 ou `success: false`, quando crio uma cobrança, então recebo `ErroProvedorPagamento`.
@@ -96,3 +97,4 @@ Estorno, Pix com CPF do pagador, outros meios de pagamento, cron de expiração,
 
 ## Histórico
 - 2026-10-16 — versão inicial (API v2 do AbacatePay verificada na documentação oficial).
+- 2026-10-22 — A chave Pix do mock passou de `mock@containerlanches.dev` para `mock@pix.invalid`. O domínio antigo não existia, mas poderia ser registrado por alguém e virar uma chave real. Com o TLD reservado `.invalid`, isso nunca acontece (pedido do usuário).

@@ -2,7 +2,8 @@ import { randomUUID } from "node:crypto";
 import type { CobrancaCriada, EntradaCobranca, PagamentoProvedor, StatusPagamento } from "./tipos";
 
 // Provedor sem conta externa (PAG-RF-03). Gera um BR Code plausível (com CRC16 válido)
-// para exercitar a separação do Pix no n8n, mas que NÃO é pagável de verdade.
+// para exercitar a separação do Pix no n8n, mas que NÃO é pagável de verdade: a chave fica
+// no TLD reservado ".invalid" (RFC 2606), que nunca pode ser registrado nem virar chave Pix.
 
 /** CRC16-CCITT (poly 0x1021, init 0xFFFF), como exige o padrão EMV do Pix. */
 export function crc16Ccitt(texto: string): string {
@@ -23,7 +24,7 @@ function montarBrCode(valorCentavos: number, txid: string): string {
   const semCrc =
     campo("00", "01") +
     campo("01", "12") +
-    campo("26", campo("00", "br.gov.bcb.pix") + campo("01", "mock@containerlanches.dev")) +
+    campo("26", campo("00", "br.gov.bcb.pix") + campo("01", "mock@pix.invalid")) +
     campo("52", "0000") +
     campo("53", "986") +
     campo("54", valor) +
