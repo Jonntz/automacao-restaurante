@@ -189,6 +189,35 @@ try {
   falha("ADM-RF-17", "excluir item de teste", e);
 }
 
+async function dialogoDeItemCabe(rotulo) {
+  // CA-11 (005): com nome de categoria longo, nenhum campo do diálogo "Editar item" passa da caixa
+  await page.goto(`${BASE}/admin/cardapio`);
+  await page.getByRole("button", { name: "Editar Mussarela" }).click();
+  const dialogo = page.getByRole("dialog");
+  await dialogo.getByLabel("Nome").waitFor();
+  await page.waitForTimeout(400); // fim da animação de abertura (scale), que distorce as medidas
+  const caixa = await dialogo.boundingBox();
+  const campos = await dialogo.locator('input, textarea, [data-slot="select-trigger"]').evaluateAll((els) =>
+    els
+      // ignora os inputs nativos escondidos que o Radix cria (aria-hidden, opacidade 0)
+      .filter((el) => el.getAttribute("aria-hidden") !== "true" && getComputedStyle(el).opacity !== "0" && el.type !== "hidden")
+      .map((el) => ({ slot: el.getAttribute("data-slot") ?? el.tagName, ...el.getBoundingClientRect().toJSON() })),
+  );
+  const fora = campos.filter((c) => c.width > 0 && (c.left < caixa.x - 1 || c.right > caixa.x + caixa.width + 1));
+  const nomeCategoria = await dialogo.locator('[data-slot="select-value"]').evaluate((el) => ({ texto: el.textContent, cortado: el.scrollWidth > el.clientWidth }));
+  console.log(`   ↳ @${rotulo}: categoria "${nomeCategoria.texto}" ${nomeCategoria.cortado ? "truncada com reticências" : "inteira"}`);
+  await page.screenshot({ path: path.join(PASTA, `dialogo-item-${rotulo}.png`) });
+  await page.keyboard.press("Escape");
+  if (fora.length) throw new Error(`campos fora da caixa: ${fora.map((c) => `${c.slot} (direita ${Math.round(c.right)} > ${Math.round(caixa.x + caixa.width)})`).join(", ")}`);
+}
+
+try {
+  await dialogoDeItemCabe("1400");
+  ok("CA-11", "diálogo de item com categoria longa cabe na caixa @1400px");
+} catch (e) {
+  falha("CA-11", "diálogo de item @1400px", e);
+}
+
 for (const [largura, altura] of [
   [768, 1024],
   [390, 844],
@@ -201,6 +230,14 @@ for (const [largura, altura] of [
     await page.screenshot({ path: path.join(PASTA, `${rota}-${largura}.png`), fullPage: true });
     if (transborda) falha("ADM-RNF-01", `/admin/${rota} @${largura}px`, "página com rolagem horizontal");
     else ok("ADM-RNF-01", `/admin/${rota} @${largura}px sem rolagem horizontal`);
+  }
+  if (largura === 390) {
+    try {
+      await dialogoDeItemCabe("390");
+      ok("CA-11", "diálogo de item com categoria longa cabe na caixa @390px");
+    } catch (e) {
+      falha("CA-11", "diálogo de item @390px", e);
+    }
   }
 }
 

@@ -76,6 +76,7 @@ Dar ao restaurante uma tela para acompanhar e mover os pedidos em tempo quase re
 - **CA-08** — Dado que desligo a disponibilidade de X-Bacon, quando o bot revisa um pedido com X-Bacon, então recebe o erro de indisponível.
 - **CA-09** — Dado que fecho a loja, quando o bot tenta criar um pedido, então recebe `LOJA_FECHADA`.
 - **CA-10** — Dados dois cliques rápidos em "Iniciar preparo", então apenas uma transição acontece e o segundo clique recebe uma mensagem amigável.
+- **CA-11** — Dada uma categoria de nome longo (ex.: "Pizzas Tradicionais — Grande, 8 fatias"), quando edito um item em 1400 px ou 390 px, então nenhum campo do diálogo ultrapassa a caixa, e o nome da categoria é truncado com reticências.
 
 ## Fora de escopo
 Vários usuários ou perfis, edição de configurações além do switch da loja, impressão, relatórios, upload de imagens, drag-and-drop no kanban.
@@ -88,3 +89,4 @@ Vários usuários ou perfis, edição de configurações além do switch da loja
   - o cabeçalho transbordava em 390px (agora quebra linha).
 
   Incluído o ADM-RNF-04 (E2E automatizado), porque o usuário pediu explicitamente uma PoC testável.
+- 2026-10-22 — Defeito relatado pelo usuário: com os nomes longos de categoria da pizzaria, o seletor de categoria do diálogo "Editar item" ultrapassava a caixa. A causa era a célula de grid sem `min-w-0` mais o `whitespace-nowrap` do SelectTrigger. Incluído o CA-11, verificado no `e2e:admin`.

@@ -49,7 +49,8 @@ export function FormularioItem({
 
   return (
     <Dialog open={item !== null} onOpenChange={(aberto) => !aberto && aoFechar()}>
-      <DialogContent>
+      {/* mais largo que o padrão: nomes de categoria da pizzaria são longos */}
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>{item?.id ? "Editar item" : "Novo item"}</DialogTitle>
           <DialogDescription>O bot passa a oferecer as mudanças na próxima mensagem.</DialogDescription>
@@ -67,17 +68,19 @@ export function FormularioItem({
               <Textarea id="descricao" name="descricao" defaultValue={item.descricao} maxLength={300} rows={2} />
               <ErroCampo estado={estado} campo="descricao" />
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="grid gap-1.5">
+            {/* min-w-0: sem ele a célula cresce até caber o nome longo da categoria e o Select vaza do diálogo (CA-11) */}
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-[8.5rem_minmax(0,1fr)]">
+              <div className="grid min-w-0 gap-1.5">
                 <Label htmlFor="preco">Preço (R$)</Label>
                 <Input id="preco" name="preco" inputMode="decimal" placeholder="25,90" defaultValue={centavosParaCampo(item.precoCentavos)} required />
                 <ErroCampo estado={estado} campo="preco" />
               </div>
-              <div className="grid gap-1.5">
+              <div className="grid min-w-0 gap-1.5">
                 <Label>Categoria</Label>
                 <Select name="categoriaId" defaultValue={item.categoriaId ? String(item.categoriaId) : undefined} required>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Escolha" />
+                  <SelectTrigger className="w-full min-w-0">
+                    {/* block!: o trigger força display:flex no valor, e truncate não funciona em contêiner flex */}
+                    <SelectValue placeholder="Escolha" className="block! min-w-0 flex-1 truncate text-left" />
                   </SelectTrigger>
                   <SelectContent>
                     {categorias.map((c) => (

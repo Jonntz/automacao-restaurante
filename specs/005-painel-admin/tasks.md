@@ -47,6 +47,8 @@
       Arquivo: src/app/admin/cardapio/* · Depende de: T005.19 · Pronto quando: CA-07/CA-08 verificados manualmente
 
 ## Fechamento
+- [x] T005.23 TESTE+IMPL: diálogo de item sem transbordar com nome de categoria longo (e2e mede os limites em 1400 px e 390 px; grid com `min-w-0` e valor do Select truncado) — CA-11, ADM-RNF-01
+      Arquivo: scripts/e2e-admin.mjs, src/app/admin/cardapio/formularios.tsx · Depende de: T005.20 · Pronto quando: e2e falha antes da correção e passa depois
 - [x] T005.22 IMPL: scripts/e2e-admin.mjs + `pnpm e2e:admin` (playwright-core + Chrome do sistema; telefone `teste:`; limpa o item criado; screenshots em `.e2e/`) — ADM-RNF-04
       Arquivo: scripts/e2e-admin.mjs, package.json, .gitignore · Depende de: T005.20 · Pronto quando: roda verde contra `pnpm dev`
 - [x] T005.21 VERIF: roteiro manual CA-01…CA-10 (login, kanban, simular, avançar, cardápio, loja fechada, duplo clique) + responsividade em 768px e 390px; testes verdes; ROADMAP; commit `feat(005)` — ADM-RNF-01…03

@@ -34,6 +34,7 @@ Este é o registro das verificações manuais e automatizadas de ponta a ponta. 
 | CA-09 | Loja fechada → bot recebe 409 `LOJA_FECHADA` | ✅ | Defeito encontrado e corrigido: o toast cobria o switch da loja |
 | CA-10 | Duplo clique em "Iniciar preparo" → só uma transição | ✅ | Coberto por teste de domínio (lock otimista). Na UI, o botão desabilita durante a ação |
 | ADM-RNF-01 | 768 px e 390 px sem rolagem horizontal da página | ✅ | Defeito encontrado e corrigido: o cabeçalho transbordava em 390 px |
+| CA-11 | Diálogo "Editar item" com categoria de nome longo cabe na caixa (1400 px e 390 px) | ✅ 2026-10-22 | Defeito relatado pelo usuário e corrigido: célula do grid sem `min-w-0`; diálogo mais largo no desktop e campos empilhados no celular |
 
 ---
 
