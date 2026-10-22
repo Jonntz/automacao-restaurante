@@ -47,6 +47,8 @@ Expor as regras de 002 e 003 em HTTP para o agente do n8n, com respostas **pensa
 - **BOT-RNF-02** — Respostas compactas: o `contexto` com o cardápio demo tem menos de 4 KB, para poupar tokens.
 
 ## Critérios de aceite
+> Os valores e IDs abaixo vêm do **cardápio de teste fixo** (`tests/helpers/cardapio-teste.ts`), não do seed demo (MRC-RF-08).
+
 - **CA-01** — Dado um request sem `x-api-key`, quando chamo qualquer rota `/api/bot/*`, então recebo 401.
 - **CA-02** — Dado um telefone novo, quando chamo `contexto`, então `cliente = null`, `cardapioTexto` contém `[id 1] X-Burguer — R$ 25,90` e não contém itens indisponíveis.
 - **CA-03** — Dado `itens` como **string** `"[{\"item_id\":\"1\",\"qtd\":\"2\"}]"`, quando chamo `revisar`, então recebo 200 com total 5180 (retirada).

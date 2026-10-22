@@ -1,4 +1,6 @@
-# 🍔 Burger Demo — Automação de restaurante (PoC)
+# 🍕 Container Lanches — Automação de pizzaria (PoC)
+
+> *Sabor que reina.* Identidade visual da logo enviada (laranja, ouro e carvão; Anton + Barlow + Yellowtail), com tema claro e escuro.
 
 Atendente com **IA no WhatsApp** que mostra o cardápio, monta o pedido, cobra via **Pix** e entrega cada pedido num **painel de gestão** em tempo quase real. Tudo roda com **camadas gratuitas**.
 
@@ -45,14 +47,14 @@ Só é preciso a chave gratuita do Gemini ([como criar](docs/setup-gemini.md)).
 pnpm install
 pnpm env:init                 # cria o .env com segredos aleatórios e mostra o login do painel
 # edite o .env e preencha GEMINI_API_KEY
-pnpm db:reset                 # banco local + cardápio demo (Burger Demo)
+pnpm db:reset                 # banco local + cardápio demo (pizzaria Container Lanches)
 pnpm dev                      # http://localhost:3000
 pnpm infra:up                 # em outro terminal: Postgres + n8n (importa e publica os workflows)
 ```
 
 1. Abra <http://localhost:5678> e crie o usuário dono do n8n (só na 1ª vez). Confira os workflows **Agente Restaurante**, **Chat Teste**, **WhatsApp Entrada** e **Notificar Cliente**.
 2. Abra o **Chat Teste**: <http://localhost:5678/webhook/6f1d6a43-8b5e-4f0a-9c3e-0b0d1e2f3a4b/chat>
-3. Converse: *"quero 2 x-burguer e uma coca lata para retirada, meu nome é Ana"* e depois *"sim"*. O código Pix chega sozinho na última mensagem.
+3. Converse: *"quero uma pizza meio calabresa e meio quatro queijos com borda de catupiry e uma coca 2 litros, para retirada, meu nome é Ana"* e depois *"sim"*. O meio a meio sai pelo sabor mais caro, e o código Pix chega sozinho na última mensagem.
 4. Abra <http://localhost:3000/admin> (login exibido pelo `env:init`). O pedido está em **Aguardando pagamento**: clique em **Simular pagamento** e ele vai para **Pagos — novos**.
 5. Avance o pedido pelo kanban, ou rode a conversa roteirizada: `pnpm smoke`.
 

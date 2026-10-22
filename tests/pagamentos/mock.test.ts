@@ -22,7 +22,7 @@ describe("provedor mock (PAG-RF-03)", () => {
     expect(c.expiraEm.getTime() - rel.agora().getTime()).toBe(1800_000);
     expect(c.copiaECola.startsWith("000201")).toBe(true);
     expect(c.copiaECola).toContain("540549.90");
-    expect(c.copiaECola).toContain("BURGER DEMO");
+    expect(c.copiaECola).toContain("5917CONTAINER LANCHES");
     expect(c.copiaECola).toMatch(/6304[0-9A-F]{4}$/);
     const semCrc = c.copiaECola.slice(0, -4);
     expect(crc16Ccitt(semCrc)).toBe(c.copiaECola.slice(-4));

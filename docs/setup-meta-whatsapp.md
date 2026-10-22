@@ -10,7 +10,7 @@ Este guia liga o atendente ao WhatsApp usando o **número de teste gratuito** da
 
 ## 1. Criar o app
 1. Acesse <https://developers.facebook.com/apps> → **Criar app**.
-2. Caso de uso **Outro** → tipo **Empresa (Business)** → dê um nome (ex.: *Burger Demo PoC*).
+2. Caso de uso **Outro** → tipo **Empresa (Business)** → dê um nome (ex.: *Container Lanches PoC*).
 3. Em **Adicionar produtos**, escolha **WhatsApp → Configurar**. A Meta cria uma conta do WhatsApp Business e um **número de teste**.
 
 ## 2. Copiar os IDs e o token
@@ -46,7 +46,7 @@ Na mesma tela, no campo **Para (To)** → **Gerenciar lista de números** → ad
    pnpm n8n:import    # atualiza a credencial do WhatsApp no n8n com o token do .env
    pnpm tunel:up      # https://<NGROK_DOMAIN> → localhost:3000
    ```
-5. Confira: abrir `https://<NGROK_DOMAIN>/` no navegador mostra a página do Burger Demo. O ngrok exibe um aviso antes, só para navegadores; as chamadas da Meta não passam por ele.
+5. Confira: abrir `https://<NGROK_DOMAIN>/` no navegador mostra a página da Container Lanches. O ngrok exibe um aviso antes, só para navegadores; as chamadas da Meta não passam por ele.
 
 ## 6. Configurar o webhook na Meta
 Em **WhatsApp → Configuração (Configuration) → Webhook → Editar**:

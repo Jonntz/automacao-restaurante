@@ -29,9 +29,9 @@ Legenda: ⬜ não iniciada · 🟨 em andamento · ✅ concluída · ⛔ bloquea
 | 007 | [agente-ia](007-agente-ia/tasks.md) | ✅ | 10/10 | CA-05…CA-12 ao vivo; Flash-Lite como principal + reserva (cota por modelo) |
 | 008 | [whatsapp](008-whatsapp/tasks.md) | 🟨 | 14/15 | Gateway → n8n → agente verificado; falta T008.15 (celular real), que precisa do app Meta + ngrok |
 | 009 | [entrega-poc](009-entrega-poc/tasks.md) | ✅ | 11/11 | Caminho rápido do zero em 106 s; tag `poc-v0.1` |
-| 010 | [marca-e-pizzaria](010-marca-e-pizzaria/tasks.md) | ⬜ | 0/13 | Pedido do usuário em 2026-10-22: logo + pizzaria + tema claro/escuro |
+| 010 | [marca-e-pizzaria](010-marca-e-pizzaria/tasks.md) | ✅ | 13/13 | Tema claro/escuro com switch, Chat Teste com a marca, seed de pizzaria com meio a meio |
 
-**Total:** 146/161 tarefas. As 2 restantes dependem só de credenciais externas (ngrok e app Meta).
+**Total:** 159/161 tarefas. As 2 restantes dependem só de credenciais externas (ngrok e app Meta).
 
 ## Credenciais externas (o usuário providencia)
 

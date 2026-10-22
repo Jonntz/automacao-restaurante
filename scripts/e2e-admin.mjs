@@ -1,4 +1,4 @@
-// Roteiro E2E do painel admin (specs/005-painel-admin, ADM-RNF-04).
+// Roteiro E2E do painel admin (specs/005-painel-admin ADM-RNF-04 e specs/010-marca-e-pizzaria).
 // Pré-requisitos: `pnpm dev` rodando, `.env` preenchido e Google Chrome instalado.
 // Uso: pnpm e2e:admin   (CHROME_PATH=/caminho/do/chrome para outro navegador Chromium)
 import fs from "node:fs";
@@ -63,7 +63,7 @@ try {
   const r = await bot("/pedidos", {
     telefone,
     nomeCliente: "Verificação E2E",
-    itens: [{ itemId: 1, quantidade: 1 }, { itemId: 8, quantidade: 1 }],
+    itens: [{ itemId: 1, quantidade: 1 }, { itemId: 18, quantidade: 1 }], // Mussarela + Coca-Cola Lata
     tipoEntrega: "retirada",
   });
   if (r.status !== 201) throw new Error(`bot respondeu ${r.status}: ${JSON.stringify(r.corpo)}`);
@@ -105,7 +105,7 @@ try {
 }
 
 try {
-  const r = await bot("/pedidos", { telefone, itens: [{ itemId: 12, quantidade: 1 }], tipoEntrega: "retirada" });
+  const r = await bot("/pedidos", { telefone, itens: [{ itemId: 10, quantidade: 1 }], tipoEntrega: "retirada" }); // Chocolate com Morango
   const n = r.corpo.pedido.numero;
   await card("Aguardando pagamento", n).getByRole("button", { name: "Cancelar" }).click({ timeout: 8000 });
   await page.getByRole("alertdialog").getByRole("button", { name: "Cancelar pedido" }).click();
@@ -116,39 +116,57 @@ try {
 }
 await page.screenshot({ path: path.join(PASTA, "pedidos-1400.png"), fullPage: true });
 
-const nomeItem = `Coxinha E2E ${Date.now().toString().slice(-4)}`;
+try {
+  // MRC-RF-04 / CA-01 (010): switch de tema troca na hora e persiste após recarregar; padrão escuro
+  const tema = page.getByRole("switch", { name: "Tema escuro" });
+  const escuro = () => page.evaluate(() => document.documentElement.classList.contains("dark"));
+  if (!(await escuro())) throw new Error("o padrão deveria ser o tema escuro");
+  await tema.click();
+  if (await escuro()) throw new Error("não trocou para o claro");
+  await page.reload();
+  await page.getByRole("switch", { name: "Tema escuro" }).waitFor();
+  if (await escuro()) throw new Error("o tema claro não persistiu após recarregar");
+  await page.screenshot({ path: path.join(PASTA, "pedidos-1400-claro.png"), fullPage: true });
+  await page.getByRole("switch", { name: "Tema escuro" }).click();
+  if (!(await escuro())) throw new Error("não voltou para o escuro");
+  ok("CA-01 (010)", "switch de tema: escuro por padrão, troca na hora e persiste após recarregar");
+} catch (e) {
+  falha("CA-01 (010)", "switch de tema", e);
+}
+
+const nomeItem = `Pizza E2E ${Date.now().toString().slice(-4)}`;
 try {
   await page.goto(`${BASE}/admin/cardapio`);
   await page.getByRole("button", { name: "Novo item" }).click();
   const dialogo = page.getByRole("dialog");
   await dialogo.getByLabel("Nome").fill(nomeItem);
-  await dialogo.getByLabel("Preço (R$)").fill("7,50");
+  await dialogo.getByLabel("Preço (R$)").fill("45,90");
   await dialogo.getByRole("button", { name: "Salvar" }).click();
   await page.getByText(`Item “${nomeItem}” salvo.`).waitFor({ timeout: 8000 });
   await page.getByText(nomeItem).first().waitFor({ timeout: 8000 });
   const ctx = await bot(`/contexto?telefone=${encodeURIComponent(telefone)}`);
-  if (!ctx.corpo.cardapioTexto.includes(`${nomeItem} — R$ 7,50`)) throw new Error("item ausente do cardapioTexto do bot");
-  ok("CA-07", `"${nomeItem}" a R$ 7,50 criado e já presente para o bot`);
+  if (!ctx.corpo.cardapioTexto.includes(`${nomeItem} — R$ 45,90`)) throw new Error("item ausente do cardapioTexto do bot");
+  ok("CA-07", `"${nomeItem}" a R$ 45,90 criado e já presente para o bot`);
 } catch (e) {
   falha("CA-07", "novo item", e);
 }
 
 try {
-  const interruptor = page.getByRole("switch", { name: "X-Bacon disponível" });
-  if ((await interruptor.getAttribute("aria-checked")) !== "true") throw new Error("X-Bacon deveria começar disponível");
+  const interruptor = page.getByRole("switch", { name: "Calabresa disponível" });
+  if ((await interruptor.getAttribute("aria-checked")) !== "true") throw new Error("Calabresa deveria começar disponível");
   await interruptor.click();
-  await page.getByText("X-Bacon indisponível.").waitFor({ timeout: 8000 });
-  const r = await bot("/pedidos/revisar", { itens: [{ itemId: 3, quantidade: 1 }], tipoEntrega: "retirada" });
+  await page.getByText("Calabresa indisponível.").waitFor({ timeout: 8000 });
+  const r = await bot("/pedidos/revisar", { itens: [{ itemId: 2, quantidade: 1 }], tipoEntrega: "retirada" });
   if (r.status !== 422 || !JSON.stringify(r.corpo).includes("indisponível")) throw new Error(JSON.stringify(r));
   await interruptor.click();
-  await page.getByText("X-Bacon disponível.").waitFor({ timeout: 8000 });
-  ok("CA-08", "X-Bacon indisponível faz o bot receber 422; religado depois");
+  await page.getByText("Calabresa disponível.").waitFor({ timeout: 8000 });
+  ok("CA-08", "Calabresa indisponível faz o bot receber 422; religada depois");
 } catch (e) {
   falha("CA-08", "disponibilidade", e);
 }
 
 try {
-  const loja = page.getByRole("switch").first();
+  const loja = page.locator("#loja-aberta"); // switch "Loja aberta/fechada" do cabeçalho
   if ((await loja.getAttribute("aria-checked")) !== "true") throw new Error("a loja deveria começar aberta");
   await loja.click();
   await page.getByText(/Loja fechada: o bot/).waitFor({ timeout: 8000 });

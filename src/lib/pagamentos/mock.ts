@@ -23,12 +23,12 @@ function montarBrCode(valorCentavos: number, txid: string): string {
   const semCrc =
     campo("00", "01") +
     campo("01", "12") +
-    campo("26", campo("00", "br.gov.bcb.pix") + campo("01", "mock@burgerdemo.dev")) +
+    campo("26", campo("00", "br.gov.bcb.pix") + campo("01", "mock@containerlanches.dev")) +
     campo("52", "0000") +
     campo("53", "986") +
     campo("54", valor) +
     campo("58", "BR") +
-    campo("59", "BURGER DEMO") +
+    campo("59", "CONTAINER LANCHES") +
     campo("60", "SAO PAULO") +
     campo("62", campo("05", txid)) +
     "6304";

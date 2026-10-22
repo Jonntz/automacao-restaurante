@@ -22,6 +22,8 @@ x-n8n-env: &n8n-env
   N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
   N8N_WEBHOOK_URL: http://localhost:5678/
   NEXT_API_URL: ${NEXT_API_URL:-http://host.docker.internal:3000}
+  # URL do Next vista pelo NAVEGADOR (logo no CSS do Chat Teste)
+  APP_URL: ${APP_URL:-http://localhost:3000}
   WHATSAPP_PHONE_NUMBER_ID: ${WHATSAPP_PHONE_NUMBER_ID:-}
   GEMINI_MODEL: ${GEMINI_MODEL:-gemini-flash-lite-latest}
   GEMINI_MODEL_RESERVA: ${GEMINI_MODEL_RESERVA:-gemini-3.1-flash-lite}

@@ -108,3 +108,39 @@ describe("Chat Teste (IA-RF-08)", () => {
     expect(destinos(chat, "Chamar atendente")).toEqual([["Resposta"]]);
   });
 });
+
+describe("pizzaria e marca (MRC-RF-06, MRC-RF-09)", () => {
+  const prompt = lerArquivo("n8n/prompts/atendente.md");
+
+  it("prompt traz as regras de tamanho, meio a meio e borda", () => {
+    expect(prompt).toMatch(/Grandes?, com 8 fatias/);
+    expect(prompt).toMatch(/Broto, com 4 fatias/);
+    expect(prompt).toMatch(/[Mm]eio a meio[\s\S]*itemId do sabor MAIS CARO/);
+    expect(prompt).toContain('"meio <sabor A> / meio <sabor B>"');
+    expect(prompt).toMatch(/[Bb]orda recheada[\s\S]*item separado/);
+  });
+
+  it("Chat Teste com título, mensagem inicial e CSS da marca (logo via APP_URL)", () => {
+    const chat = carregarWorkflow("chat-teste");
+    const gatilho = acharNo(chat, "Chat");
+    const opcoes = gatilho.parameters.options as Record<string, string>;
+    expect(opcoes.title).toBe("Container Lanches");
+    expect(opcoes.subtitle).toMatch(/Sabor que reina/);
+    expect(String(gatilho.parameters.initialMessages)).toMatch(/Container Lanches[\s\S]*🍕/);
+    const css = opcoes.customCss;
+    expect(css.startsWith("=")).toBe(true);
+    expect(css).toContain("--chat--color--primary: #F88E05");
+    expect(css).toContain("{{ $env.APP_URL }}/marca/logo-quadrada.png");
+    expect(css).toMatch(/family=Anton/);
+    expect(css).toContain("prefers-color-scheme: dark");
+    // o @n8n/chat usa ".chat-layout .chat-header" e variáveis: casar a especificidade e usar as variáveis
+    expect(css).toContain("--chat--header--border-bottom: 4px solid #F88E05");
+    expect(css).toContain("--chat--input--container--background");
+    expect(css).toContain(".chat-layout .chat-header h1");
+    expect(css).not.toMatch(/^\.chat-header\s*\{/m);
+  });
+
+  it("compose entrega APP_URL ao n8n", () => {
+    expect(lerArquivo("docker-compose.yml")).toContain("APP_URL: ${APP_URL:-http://localhost:3000}");
+  });
+});

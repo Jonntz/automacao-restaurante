@@ -120,13 +120,7 @@ clientes   1──N pedidos 1──N itens_pedido N──0..1 itens_cardapio
                 pedidos 1──N pagamentos   (no máximo 1 "pendente" vigente por pedido — regra de app)
 ```
 
-## Seed demo ("Burger Demo")
+## Seed demo
+Desde a feature 010, o seed demo é a pizzaria **Container Lanches**; o cardápio completo (5 categorias, 20 itens) está em [specs/010-marca-e-pizzaria/plan.md](../010-marca-e-pizzaria/plan.md#seed-demo-container-lanches).
 
-Configuração: taxa R$ 5,00; tempo "40–50 min"; horário "Todos os dias, 18h às 23h"; aceita retirada; endereço "Rua Exemplo, 123 – Centro"; loja aberta.
-
-| Categoria (ordem) | Itens (preço) |
-|---|---|
-| Lanches (1) | X-Burguer (25,90) · X-Salada (27,90) · X-Bacon (31,90) · Smash Duplo (34,90) |
-| Porções (2) | Batata Frita P (14,90) · Batata Cheddar e Bacon (24,90) · Onion Rings (19,90) |
-| Bebidas (3) | Coca-Cola Lata (6,50) · Guaraná Lata (6,00) · Suco Natural (9,90) · Água sem Gás (4,00) |
-| Sobremesas (4) | Brownie (12,90) · Milkshake de Chocolate (18,90) |
+Os testes de regra de negócio usam outro cardápio, **fixo** (`tests/helpers/cardapio-teste.ts`, o antigo "Burger Demo": X-Burguer 25,90, X-Salada 27,90, X-Bacon 31,90, … Coca-Cola Lata 6,50, Brownie 12,90), para que trocar o cardápio de demonstração não quebre os CAs de 002–005.

@@ -1,21 +1,23 @@
 import Link from "next/link";
+import { AlternarTema } from "@/components/alternar-tema";
+import { Marca } from "@/components/marca";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
-    <main className="flex flex-1 items-center justify-center px-4 py-16">
-      <div className="flex max-w-xl flex-col gap-6 text-center">
-        <p className="text-sm font-medium uppercase tracking-widest text-muted-foreground">Prova de conceito</p>
-        <h1 className="text-4xl font-semibold tracking-tight">Burger Demo 🍔</h1>
+    <main className="relative flex flex-1 items-center justify-center px-4 py-16">
+      <div className="absolute right-4 top-4">
+        <AlternarTema />
+      </div>
+      <div className="flex max-w-xl flex-col items-center gap-8 text-center">
+        <Marca tamanho="lg" />
         <p className="text-lg text-muted-foreground">
-          Atendimento por IA no WhatsApp, pedidos com pagamento via Pix e um painel para a cozinha acompanhar tudo
-          em tempo real.
+          Pizzaria com atendimento por IA no WhatsApp: o cliente monta a pizza (inteira ou meio a meio), paga via
+          Pix e a cozinha acompanha cada pedido em tempo real.
         </p>
-        <div className="flex justify-center gap-3">
-          <Button asChild size="lg">
-            <Link href="/admin">Abrir painel</Link>
-          </Button>
-        </div>
+        <Button asChild size="lg" className="px-8 font-semibold">
+          <Link href="/admin">Abrir painel</Link>
+        </Button>
       </div>
     </main>
   );

@@ -1,10 +1,11 @@
 import { eq } from "drizzle-orm";
 import type { Db } from "@/lib/db/client";
 import { configuracoes, itensCardapio } from "@/lib/db/schema";
-import { seedDemo } from "@/lib/db/seed";
+import { aplicarSeed } from "@/lib/db/seed";
+import { CARDAPIO_TESTE } from "./cardapio-teste";
 import { criarDbTeste } from "./db";
 
-/** IDs do seed demo (ordem de inserção em src/lib/db/seed.ts). */
+/** IDs do cardápio de teste fixo (tests/helpers/cardapio-teste.ts). */
 export const ITEM = {
   xBurguer: 1, // 25,90
   xSalada: 2, // 27,90
@@ -18,9 +19,10 @@ export const ITEM = {
 
 export const ENDERECO = "Rua das Flores, 45 – apto 12";
 
+/** Banco em memória com o cardápio de TESTE (não o seed demo — MRC-RF-08). */
 export async function criarDbComSeed(): Promise<Db> {
   const db = await criarDbTeste();
-  await seedDemo(db);
+  await aplicarSeed(db, CARDAPIO_TESTE);
   return db;
 }
 

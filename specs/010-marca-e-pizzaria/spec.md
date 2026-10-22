@@ -84,3 +84,7 @@ Tamanhos e variações no modelo de dados, pizzas com 3+ sabores, montagem de pi
 
 ## Histórico
 - 2026-10-22 — versão inicial.
+- 2026-10-22 — Decisões tomadas na implementação:
+  - **Logo grande** (login e landing): usa o **emblema** circular do personagem (`emblema.png`, alta resolução) + o wordmark tipográfico + o slogan. A imagem retangular repetia o nome e mostrava os cantos do upload. O original fica em `public/marca/logo.jpg`.
+  - **Chat Teste:** o `@n8n/chat` estiliza o cabeçalho com `.chat-layout .chat-header` e variáveis (`--chat--header--background`, `--chat--header--border-bottom`, `--chat--input--container--background`). O CSS da marca usa essas variáveis e o mesmo nível de seletor.
+  - **Expressão `{{ $env.APP_URL }}` no `customCss`:** é avaliada pelo n8n 2.43.4, então o plano B (data URI) não foi necessário.

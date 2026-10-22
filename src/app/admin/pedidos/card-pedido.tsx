@@ -54,13 +54,13 @@ export function CardPedido({
     <Card
       className={cn(
         "gap-2 py-3 transition-shadow",
-        destacado && "ring-2 ring-emerald-500 shadow-lg shadow-emerald-500/20",
+        destacado && "ring-2 ring-primary shadow-lg shadow-primary/30",
         pedido.status === "cancelado" && "opacity-70",
       )}
     >
       <CardHeader className="gap-1 px-3">
         <button type="button" onClick={aoAbrir} className="flex items-center justify-between text-left">
-          <span className="font-semibold">{pedido.numero}</span>
+          <span className="font-heading text-lg tracking-wide">{pedido.numero}</span>
           <span className="text-xs text-muted-foreground" title={new Date(pedido.criadoEm).toLocaleString("pt-BR")}>
             {tempoRelativo(new Date(pedido.criadoEm), agora)}
           </span>

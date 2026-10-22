@@ -79,6 +79,8 @@ Implementar as regras de negócio de cardápio e pedido, sem HTTP: consultar o c
 - **PED-RNF-02** — Criar o pedido e seus itens é atômico: em caso de erro, nada fica gravado.
 
 ## Critérios de aceite
+> Os valores e IDs abaixo vêm do **cardápio de teste fixo** (`tests/helpers/cardapio-teste.ts`), não do seed demo (MRC-RF-08).
+
 - **CA-01** — Dado o cardápio seed com X-Salada indisponível, quando chamo `obterCardapio({somenteDisponiveis: true})`, então X-Salada não aparece e as categorias vêm na ordem 1–4.
 - **CA-02** — Dada a entrada `[{itemId: 1, quantidade: 2, precoUnitario: 1}]` (X-Burguer 25,90) para `retirada`, quando calculo, então subtotal = 5180, taxa = 0, total = 5180.
 - **CA-03** — Dados X-Bacon ×1 + Coca ×2 para `entrega` com endereço válido, quando calculo, então subtotal = 3190 + 1300 = 4490, taxa = 500, total = 4990.

@@ -9,8 +9,8 @@ const N8N = process.env.N8N_URL ?? "http://localhost:5678";
 const APP = process.env.APP_URL ?? "http://localhost:3000";
 const sessionId = `smoke-${Date.now()}`;
 const ROTEIRO = [
-  "oi, o que vocês têm de lanche?",
-  "quero 2 x-burguer e 1 coca lata para retirada, meu nome é Teste Smoke",
+  "oi, quais pizzas vocês têm?",
+  "quero 1 pizza calabresa e 1 coca-cola lata para retirada, meu nome é Teste Smoke",
   "sim, pode confirmar",
 ];
 // Free tier do Gemini tem poucas requisições por minuto: espaçamos as mensagens.

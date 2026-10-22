@@ -12,16 +12,16 @@
 {
   "ok": true,
   "restaurante": {
-    "nome": "Burger Demo",
+    "nome": "Container Lanches",
     "lojaAberta": true,
-    "horario": "Todos os dias, 18h às 23h",
+    "horario": "Todos os dias, 18h às 23h30",
     "tempoEstimado": "40–50 min",
     "taxaEntrega": "R$ 5,00",
     "taxaEntregaCentavos": 500,
     "aceitaRetirada": true,
     "enderecoRetirada": "Rua Exemplo, 123 – Centro"
   },
-  "cardapioTexto": "## Lanches\n[id 1] X-Burguer — R$ 25,90 — Pão, carne 150g, queijo\n...",
+  "cardapioTexto": "## Pizzas Tradicionais — Grande, 8 fatias\n[id 1] Mussarela — R$ 49,90 — Molho de tomate, mussarela e orégano\n...",
   "cliente": { "nome": "Ana", "ultimoEndereco": "Rua das Flores, 45 – apto 12" },
   "pedidosRecentes": [
     { "numero": "#0012", "status": "em_preparo", "statusTexto": "Em preparo", "total": "R$ 49,90", "criadoEm": "2026-10-16T21:10:00.000Z" }

@@ -2,7 +2,8 @@
 
 ## Arquivos
 ```
-public/marca/logo.jpg, public/marca/logo-quadrada.png   # imagem enviada + recorte quadrado (PIL)
+public/marca/logo.jpg                                    # imagem original enviada
+public/marca/emblema.png, public/marca/logo-quadrada.png # personagem em recorte circular transparente (384 px / 256 px, PIL)
 src/app/icon.png                                         # ícone da aba (convenção do Next)
 src/app/globals.css                                      # tokens hex claro/escuro + --font-heading/--font-script
 src/app/layout.tsx                                       # fontes Anton/Barlow/Yellowtail + ThemeProvider (padrão escuro)

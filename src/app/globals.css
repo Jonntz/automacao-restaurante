@@ -7,9 +7,10 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
+  --font-sans: var(--font-barlow);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-anton);
+  --font-script: var(--font-yellowtail);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -48,73 +49,79 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* Marca Container Lanches (specs/010-marca-e-pizzaria). Cores extraídas da logo; contraste testado em tests/marca. */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --background: #FBF5EC;
+  --foreground: #211209;
+  --card: #FFFFFF;
+  --card-foreground: #211209;
+  --popover: #FFFFFF;
+  --popover-foreground: #211209;
+  --primary: #F28A0A;
+  --primary-foreground: #1A0E06;
+  --secondary: #F8C02A;
+  --secondary-foreground: #1A0E06;
+  --muted: #F3E6D2;
+  --muted-foreground: #6B4F36;
+  --accent: #FCE7C3;
+  --accent-foreground: #211209;
+  --destructive: #B3261E;
+  --border: #E6D3B8;
+  --input: #E6D3B8;
+  --ring: #D8660F;
+  --chart-1: #F28A0A;
+  --chart-2: #F8C02A;
+  --chart-3: #D8660F;
+  --chart-4: #6D0706;
+  --chart-5: #6B4F36;
+  --radius: 0.75rem;
+  --sidebar: #F7EDDF;
+  --sidebar-foreground: #211209;
+  --sidebar-primary: #F28A0A;
+  --sidebar-primary-foreground: #1A0E06;
+  --sidebar-accent: #FCE7C3;
+  --sidebar-accent-foreground: #211209;
+  --sidebar-border: #E6D3B8;
+  --sidebar-ring: #D8660F;
+  /* wordmark: gradiente do "CONTAINER" e cor do script "Lanches" */
+  --marca-gradiente: linear-gradient(180deg, #F9A23A 0%, #F88E05 45%, #D8660F 100%);
+  --marca-script: #6D0706;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #130B06;
+  --foreground: #F4E6CF;
+  --card: #1E120A;
+  --card-foreground: #F4E6CF;
+  --popover: #1E120A;
+  --popover-foreground: #F4E6CF;
+  --primary: #F88E05;
+  --primary-foreground: #1A0E06;
+  --secondary: #3A2414;
+  --secondary-foreground: #F8C02A;
+  --muted: #26170D;
+  --muted-foreground: #C9AE8C;
+  --accent: #2E1C10;
+  --accent-foreground: #F4E6CF;
+  --destructive: #FF6B5E;
+  --border: #3A2616;
+  --input: #3A2616;
+  --ring: #F8C02A;
+  --chart-1: #F88E05;
+  --chart-2: #F8C02A;
+  --chart-3: #D8660F;
+  --chart-4: #FF6B5E;
+  --chart-5: #C9AE8C;
+  --sidebar: #1A0F08;
+  --sidebar-foreground: #F4E6CF;
+  --sidebar-primary: #F88E05;
+  --sidebar-primary-foreground: #1A0E06;
+  --sidebar-accent: #2E1C10;
+  --sidebar-accent-foreground: #F4E6CF;
+  --sidebar-border: #3A2616;
+  --sidebar-ring: #F8C02A;
+  --marca-gradiente: linear-gradient(180deg, #FFB347 0%, #F88E05 45%, #E8590C 100%);
+  --marca-script: #EFD7B1;
 }
 
 @layer base {
@@ -127,4 +134,16 @@
   html {
     @apply font-sans;
   }
+  h1, h2, h3 {
+    @apply font-heading tracking-wide;
+  }
+}
+
+/* Wordmark "CONTAINER": letras com o gradiente laranja da logo e contorno escuro. */
+@utility texto-marca {
+  background: var(--marca-gradiente);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-stroke: 0.04em #1A0E06;
 }

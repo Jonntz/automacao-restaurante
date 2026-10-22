@@ -13,7 +13,7 @@ Montar a base do projeto: app Next.js, testes, banco libSQL com schema e seed de
 - **FUN-RF-02** — Vitest configurado com o alias `@/` e um helper `criarDbTeste()`, que entrega um banco libSQL `:memory:` com as migrations aplicadas e um banco novo por chamada.
 - **FUN-RF-03** — Um único módulo de banco (`src/lib/db/client.ts`) cria a conexão a partir de `DATABASE_URL`, mais `DATABASE_AUTH_TOKEN` opcional. Aceita `file:`, `libsql://` e `:memory:`.
 - **FUN-RF-04** — Schema Drizzle conforme [data-model.md](data-model.md), com migrations SQL versionadas em `drizzle/`.
-- **FUN-RF-05** — Seed **idempotente** do restaurante demo "Burger Demo": a configuração mais 4 categorias e 13 itens.
+- **FUN-RF-05** — Seed **idempotente** do restaurante demo. Desde a feature 010 é a pizzaria **Container Lanches** (5 categorias, 20 itens); os testes de domínio usam um cardápio de teste fixo, separado (MRC-RF-08).
 - **FUN-RF-06** — `src/lib/env.ts` valida as variáveis com zod e falha cedo, com mensagem clara que lista as que faltam. Cada módulo valida só o que usa (`env.banco()`, `env.admin()`, …), para que os testes não exijam o `.env` completo.
 - **FUN-RF-07** — `.env.example` documenta **todas** as variáveis de [arquitetura.md](../arquitetura.md#variáveis-de-ambiente), com comentários e valores fictícios.
 - **FUN-RF-08** — Utilitários de dinheiro em `src/lib/dinheiro.ts`:

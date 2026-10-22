@@ -87,7 +87,7 @@ export function Kanban() {
   return (
     <div className="flex flex-col gap-4 p-4">
       <div className="flex flex-wrap items-center gap-3">
-        <h1 className="text-xl font-semibold">Pedidos</h1>
+        <h1 className="text-3xl uppercase">Pedidos</h1>
         <span className="text-xs text-muted-foreground">
           {segundos === null ? "Carregando…" : `Atualizado há ${segundos}s`}
         </span>
@@ -107,7 +107,7 @@ export function Kanban() {
           (estado?.colunas ?? []).map((coluna) => (
           <section key={coluna.id} className="flex w-72 shrink-0 flex-col gap-3 rounded-xl bg-muted/50 p-3">
             <header className="flex items-center justify-between">
-              <h2 className="text-sm font-medium">{coluna.titulo}</h2>
+              <h2 className="text-base uppercase">{coluna.titulo}</h2>
               <Badge variant="secondary">{coluna.pedidos.length}</Badge>
             </header>
             {coluna.pedidos.length === 0 && <p className="py-6 text-center text-xs text-muted-foreground">Nenhum pedido</p>}

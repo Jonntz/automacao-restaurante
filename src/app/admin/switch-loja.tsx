@@ -21,7 +21,7 @@ export function SwitchLoja({ aberta }: { aberta: boolean }) {
   return (
     <div className="flex items-center gap-2">
       <Switch id="loja-aberta" checked={otimista} onCheckedChange={alternar} />
-      <Label htmlFor="loja-aberta" className={otimista ? "whitespace-nowrap text-emerald-600" : "whitespace-nowrap text-muted-foreground"}>
+      <Label htmlFor="loja-aberta" className={otimista ? "whitespace-nowrap font-semibold text-foreground" : "whitespace-nowrap text-muted-foreground"}>
         {otimista ? "Loja aberta" : "Loja fechada"}
       </Label>
     </div>

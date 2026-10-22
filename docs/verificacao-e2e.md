@@ -110,3 +110,21 @@ curl -s -X POST localhost:3000/api/webhooks/whatsapp -H "x-hub-signature-256: $A
 | CA-02 | Cada linha deste roteiro com resultado ou ⏳ justificado | ✅ |
 | CA-03 | `pnpm typecheck && pnpm lint && pnpm test && pnpm build` | ✅ |
 | CA-04 | Nenhum segredo real versionado | ✅ |
+
+---
+
+## 010 — Marca Container Lanches e pizzaria
+
+**Data:** 2026-10-22
+**Ambiente:** mesmo do 007, banco recriado com o seed da pizzaria (`pnpm db:reset`). Screenshots em `.e2e/marca/` (landing, login, pedidos e cardápio nos temas claro/escuro; chat nos esquemas claro/escuro do sistema).
+
+| CA | Cenário | Resultado | Observação |
+|---|---|---|---|
+| CA-01 | Switch de tema troca na hora e persiste após recarregar | ✅ | `pnpm e2e:admin` (escuro por padrão → claro → reload → claro → escuro) |
+| CA-02 | Contraste ≥ 4,5:1 dos pares de tokens nos dois temas | ✅ | `tests/marca/contraste.test.ts` (menor par: 6,0:1) |
+| CA-03 | Logo e wordmark no admin e no login; títulos em Anton | ✅ | Fonte computada: h1 = Anton, corpo = Barlow |
+| CA-04 | Seed demo: 5 categorias e 20 itens, tamanho no nome da categoria | ✅ | `tests/fundacao/seed.test.ts` |
+| CA-05 | Meio calabresa / meio quatro queijos + borda de Catupiry + Coca 2 L | ✅ | Gravou Quatro Queijos (R$ 62,90) com observação "meio calabresa / meio quatro queijos", borda como item, total R$ 87,70 |
+| CA-06 | Chat Teste com logo, título e cores da marca | ✅ | Cabeçalho carvão com emblema, "CONTAINER LANCHES" em Anton com gradiente e filete laranja; corpo claro ou escuro conforme o sistema |
+| CA-07 | Trocar o seed demo não quebra os testes de domínio | ✅ | Suíte inteira verde depois da troca (cardápio de teste fixo) |
+| RNF-01 | typecheck, lint, test (312), build, `e2e:admin` (15/15), `smoke` (pizza) | ✅ | |
