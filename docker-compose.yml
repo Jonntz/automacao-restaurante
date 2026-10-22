@@ -1,6 +1,7 @@
 # Infra local da PoC (specs/006-n8n-infra). Lê o .env da raiz.
 #   pnpm infra:up     → postgres + n8n-bootstrap (importa credenciais/workflows) + n8n
 #   pnpm tunel:up     → ngrok expondo o Next.js (:3000) no NGROK_DOMAIN
+#   docker compose --profile publico up -d → + Caddy (HTTPS) na VM da demo (specs/011-demo-publica)
 name: automacao-restaurante
 
 x-n8n-env: &n8n-env
@@ -20,7 +21,7 @@ x-n8n-env: &n8n-env
   N8N_PERSONALIZATION_ENABLED: "false"
   N8N_VERSION_NOTIFICATIONS_ENABLED: "false"
   N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
-  N8N_WEBHOOK_URL: http://localhost:5678/
+  N8N_WEBHOOK_URL: ${N8N_WEBHOOK_URL:-http://localhost:5678/}
   NEXT_API_URL: ${NEXT_API_URL:-http://host.docker.internal:3000}
   # URL do Next vista pelo NAVEGADOR (logo no CSS do Chat Teste)
   APP_URL: ${APP_URL:-http://localhost:3000}
@@ -90,6 +91,26 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
+  # Borda HTTPS da VM da demo: só /webhook/* com x-webhook-secret chega ao n8n (infra/Caddyfile).
+  caddy:
+    image: caddy:2.11.6-alpine
+    profiles: ["publico"]
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      N8N_DOMINIO: ${N8N_DOMINIO:-defina-N8N_DOMINIO-no-env}
+      N8N_WEBHOOK_SECRET: ${N8N_WEBHOOK_SECRET:?defina N8N_WEBHOOK_SECRET no .env}
+    volumes:
+      - ./infra/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - n8n
+
 volumes:
   postgres_data:
   n8n_data:
+  caddy_data:
+  caddy_config:

@@ -1,0 +1,15 @@
+# Borda HTTPS do n8n na VM da demo (specs/011-demo-publica DEM-RF-04).
+# Só /webhook/* com o x-webhook-secret certo chega ao n8n; o resto (editor, API, chat hospedado) é 404.
+# O certificado vem do Let's Encrypt para N8N_DOMINIO (ex.: n8n.129-146-10-20.sslip.io).
+{$N8N_DOMINIO} {
+	@permitido {
+		path /webhook/*
+		header X-Webhook-Secret {$N8N_WEBHOOK_SECRET}
+	}
+	handle @permitido {
+		reverse_proxy n8n:5678
+	}
+	handle {
+		respond 404
+	}
+}

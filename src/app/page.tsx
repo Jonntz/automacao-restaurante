@@ -15,9 +15,14 @@ export default function Home() {
           Pizzaria com atendimento por IA no WhatsApp: o cliente monta a pizza (inteira ou meio a meio), paga via
           Pix e a cozinha acompanha cada pedido em tempo real.
         </p>
-        <Button asChild size="lg" className="px-8 font-semibold">
-          <Link href="/admin">Abrir painel</Link>
-        </Button>
+        <div className="flex flex-wrap justify-center gap-3">
+          <Button asChild size="lg" className="px-8 font-semibold">
+            <Link href="/chat">Fazer um pedido</Link>
+          </Button>
+          <Button asChild size="lg" variant="outline" className="px-8 font-semibold">
+            <Link href="/admin">Abrir painel</Link>
+          </Button>
+        </div>
       </div>
     </main>
   );

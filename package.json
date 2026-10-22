@@ -15,6 +15,7 @@
     "db:seed": "tsx --env-file-if-exists=.env scripts/db-seed.ts",
     "db:reset": "tsx --env-file-if-exists=.env scripts/db-reset.ts",
     "e2e:admin": "node scripts/e2e-admin.mjs",
+    "e2e:chat": "node scripts/e2e-chat.mjs",
     "infra:up": "docker compose up -d",
     "infra:down": "docker compose down",
     "infra:logs": "docker compose logs -f n8n-bootstrap n8n",
@@ -23,6 +24,8 @@
     "n8n:import": "docker compose run --rm n8n-bootstrap && docker compose restart n8n",
     "n8n:export": "tsx scripts/n8n-export.ts",
     "smoke": "tsx scripts/smoke-chat.ts",
+    "demo:vm": "bash scripts/vm-deploy.sh",
+    "demo:vercel-env": "bash scripts/demo-vercel-env.sh",
     "env:init": "tsx scripts/env-init.ts"
   },
   "dependencies": {

@@ -9,7 +9,7 @@ Legenda: ⬜ não iniciada · 🟨 em andamento · ✅ concluída · ⛔ bloquea
       │                                                                             │
       └──────────────► 006 n8n-infra ─────────────────────────────────────────────► 007 agente-ia ──► 008 whatsapp
                                                                                                          │
-                                                              (todas) ──────────────────────────────► 009 entrega-poc ──► 010 marca-e-pizzaria
+                                                              (todas) ──────────────────────────────► 009 entrega-poc ──► 010 marca-e-pizzaria ──► 011 demo-publica
 ```
 
 - A 006 depende só da 001 e pode correr em paralelo a 002–005.
@@ -30,8 +30,9 @@ Legenda: ⬜ não iniciada · 🟨 em andamento · ✅ concluída · ⛔ bloquea
 | 008 | [whatsapp](008-whatsapp/tasks.md) | 🟨 | 14/15 | Gateway → n8n → agente verificado; falta T008.15 (celular real), que precisa do app Meta + ngrok |
 | 009 | [entrega-poc](009-entrega-poc/tasks.md) | ✅ | 11/11 | Caminho rápido do zero em 106 s; tag `poc-v0.1` |
 | 010 | [marca-e-pizzaria](010-marca-e-pizzaria/tasks.md) | ✅ | 13/13 | Tema claro/escuro com switch, Chat Teste com a marca, seed de pizzaria com meio a meio |
+| 011 | [demo-publica](011-demo-publica/tasks.md) | 🟨 | 8/13 | Chat web + proxy + Caddy prontos e testados; o deploy espera as contas Turso, Vercel e Oracle |
 
-**Total:** 162/164 tarefas. As 2 restantes dependem só de credenciais externas (ngrok e app Meta).
+**Total:** 170/177 tarefas. As restantes dependem de contas externas: ngrok e app Meta (006/008); Turso, Vercel e Oracle (011).
 
 ## Credenciais externas (o usuário providencia)
 

@@ -105,6 +105,17 @@ Os três gatilhos levam à mesma `reconciliarPagamento()`. Ela consulta `GET tra
 
 **ADR-09 — Identidade do cliente = telefone (wa_id).** No Chat Teste, o telefone é `teste:<sessionId>`. O canal é derivado desse prefixo, e o canal `teste` nunca recebe notificação.
 
+**ADR-10 — Demonstração pública: Vercel + VM com borda filtrada (feature 011).** Para mandar um link ao cliente sem depender da máquina local:
+- o Next.js vai para a Vercel e usa o Turso;
+- o n8n roda numa VM Oracle Always Free, com o mesmo `docker-compose.yml`, atrás de um Caddy (profile `publico`). O Caddy só repassa `/webhook/*` com `x-webhook-secret` correto e devolve 404 para todo o resto, inclusive o editor;
+- o chat web é uma página do próprio Next (`/chat`) que fala com o Chat Teste do n8n por um proxy (`/api/chat`).
+
+*Consequências:*
+- o n8n continua dono da conversa (Constituição X);
+- o cliente vê um único domínio;
+- a VM só aceita chamadas de quem conhece o segredo, que é só a Vercel;
+- o ambiente local não muda, porque sem o profile `publico` não há Caddy.
+
 ## Variáveis de ambiente
 
 Um único `.env` na raiz, lido pelo Next.js e pelo `docker compose`.
@@ -135,6 +146,9 @@ Um único `.env` na raiz, lido pelo Next.js e pelo `docker compose`.
 | `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | compose | Banco do n8n |
 | `N8N_ENCRYPTION_KEY` | compose | Chave de criptografia das credenciais do n8n |
 | `NGROK_AUTHTOKEN` / `NGROK_DOMAIN` | compose | Túnel público (profile `tunel`) |
+| `N8N_DOMINIO` | compose (Caddy) | Só na VM da demo: domínio HTTPS do n8n, ex.: `n8n.129-146-10-20.sslip.io` (011) |
+| `N8N_WEBHOOK_URL` | compose (n8n) | URL pública dos webhooks do n8n. Padrão `http://localhost:5678/`; na VM, `https://<N8N_DOMINIO>/` |
+| `ENABLE_EXPERIMENTAL_COREPACK` | Vercel | `1`: o build usa o pnpm do `packageManager` |
 
 ## Segurança (resumo)
 
@@ -147,6 +161,8 @@ Um único `.env` na raiz, lido pelo Next.js e pelo `docker compose`.
   | `/api/webhooks/whatsapp` | HMAC SHA-256 |
   | `/api/webhooks/abacatepay` | segredo na query |
   | `/admin/*` e `/api/admin/*` | cookie JWT |
+  | `/chat` e `/api/chat` | públicos por desenho (demo); o proxy só repassa `action/sessionId/chatInput` validados, com até 1000 caracteres |
+  | n8n na VM da demo (Caddy) | só `/webhook/*` com `x-webhook-secret`; o resto devolve 404 |
 
 - Toda comparação de segredo é timing-safe.
 - Tentativas de prompt injection não mexem em dinheiro (Princípio I) e o telefone vem do workflow, nunca do LLM.

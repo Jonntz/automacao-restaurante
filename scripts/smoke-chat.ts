@@ -1,5 +1,6 @@
 // Conversa roteirizada com o agente pelo Chat Teste do n8n (IA-RF-09).
 // Pré-requisitos: `pnpm dev`, `pnpm infra:up` e GEMINI_API_KEY no .env. Uso: pnpm smoke
+// Demo pública (specs/011-demo-publica): SMOKE_CHAT_URL=<app>/api/chat APP_URL=<app> BOT_API_KEY=<da demo> pnpm smoke
 // É um teste MANUAL: a resposta do LLM não é determinística.
 import fs from "node:fs";
 
@@ -7,6 +8,8 @@ if (fs.existsSync(".env")) process.loadEnvFile(".env");
 const ids = JSON.parse(fs.readFileSync("n8n/ids.json", "utf8")) as { chatTesteWebhookId: string };
 const N8N = process.env.N8N_URL ?? "http://localhost:5678";
 const APP = process.env.APP_URL ?? "http://localhost:3000";
+// Padrão: direto no Chat Teste do n8n local. Com SMOKE_CHAT_URL, conversa pelo proxy /api/chat do Next.
+const CHAT_URL = process.env.SMOKE_CHAT_URL ?? `${N8N}/webhook/${ids.chatTesteWebhookId}/chat`;
 const sessionId = `smoke-${Date.now()}`;
 const ROTEIRO = [
   "oi, quais pizzas vocês têm?",
@@ -17,12 +20,12 @@ const ROTEIRO = [
 const PAUSA_MS = 4000;
 
 async function falar(chatInput: string): Promise<string> {
-  const resposta = await fetch(`${N8N}/webhook/${ids.chatTesteWebhookId}/chat`, {
+  const resposta = await fetch(CHAT_URL, {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({ action: "sendMessage", sessionId, chatInput }),
   });
-  if (!resposta.ok) throw new Error(`n8n respondeu HTTP ${resposta.status}: ${await resposta.text()}`);
+  if (!resposta.ok) throw new Error(`chat respondeu HTTP ${resposta.status}: ${await resposta.text()}`);
   const corpo = (await resposta.json()) as { output?: string; text?: string };
   return corpo.output ?? corpo.text ?? JSON.stringify(corpo);
 }

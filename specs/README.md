@@ -28,6 +28,7 @@ Este diretório é a **fonte da verdade** do projeto. Usamos Spec-Driven Develop
 | 008 | [whatsapp](008-whatsapp/spec.md) | WPP | Gateway do webhook da Meta, entrada e envio de mensagens |
 | 009 | [entrega-poc](009-entrega-poc/spec.md) | ENT | README, guias, deploy, troubleshooting, verificação E2E |
 | 010 | [marca-e-pizzaria](010-marca-e-pizzaria/spec.md) | MRC | Identidade visual Container Lanches (claro/escuro) e cardápio de pizzaria |
+| 011 | [demo-publica](011-demo-publica/spec.md) | DEM | Link público: Next na Vercel + Turso, n8n numa VM Oracle atrás do Caddy, chat web `/chat` |
 
 ## Convenções
 
