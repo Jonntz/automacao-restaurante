@@ -24,7 +24,11 @@ for k in "${VARS[@]}"; do
     echo "⏭  $k vazio no $ENV_DEMO (pulei)"
     continue
   fi
-  vercel env rm "$k" production --yes >/dev/null 2>&1 || true
-  printf '%s' "$v" | vercel env add "$k" production >/dev/null
-  echo "✔ $k"
+  # --force sobrescreve; a CLI não ecoa o valor, então a saída pode aparecer no erro.
+  if saida=$(printf '%s' "$v" | vercel env add "$k" --environment production --force 2>&1); then
+    echo "✔ $k"
+  else
+    echo "✖ $k: $(printf '%s' "$saida" | grep -vE '^\s*$' | tail -3)"
+    exit 1
+  fi
 done

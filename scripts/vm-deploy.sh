@@ -23,7 +23,8 @@ N8N_DOMINIO=$(val N8N_DOMINIO)
 [ -f "$VM_CHAVE" ] || { echo "✖ chave SSH não encontrada: $VM_CHAVE"; exit 1; }
 chmod 600 "$VM_CHAVE"
 
-SSH_OPCOES="-i $VM_CHAVE -o StrictHostKeyChecking=accept-new -o ConnectTimeout=15"
+# ServerAlive*: sem tráfego (bootstrap silencioso na VM lenta) a conexão caía e o script ficava pendurado.
+SSH_OPCOES="-i $VM_CHAVE -o StrictHostKeyChecking=accept-new -o ConnectTimeout=15 -o ServerAliveInterval=15 -o ServerAliveCountMax=8"
 DESTINO=container-lanches
 remoto() { ssh $SSH_OPCOES "$VM_USUARIO@$VM_IP" "$@"; }
 
@@ -46,7 +47,9 @@ remoto "mkdir -p $DESTINO/infra $DESTINO/n8n"
 rsync -az -e "ssh $SSH_OPCOES" docker-compose.yml scripts/vm-provisionar.sh "$VM_USUARIO@$VM_IP:$DESTINO/"
 rsync -az --delete -e "ssh $SSH_OPCOES" infra/ "$VM_USUARIO@$VM_IP:$DESTINO/infra/"
 rsync -az --delete -e "ssh $SSH_OPCOES" n8n/ "$VM_USUARIO@$VM_IP:$DESTINO/n8n/"
-rsync -az --chmod=F600 -e "ssh $SSH_OPCOES" "$ENV_VM" "$VM_USUARIO@$VM_IP:$DESTINO/.env"
+# -a preserva o 600 do arquivo temporário; o chmod garante (o rsync do macOS não aceita --chmod=F600).
+rsync -az -e "ssh $SSH_OPCOES" "$ENV_VM" "$VM_USUARIO@$VM_IP:$DESTINO/.env"
+remoto "chmod 600 $DESTINO/.env"
 
 echo "→ preparando a VM (swap, firewall, Docker)"
 remoto "bash $DESTINO/vm-provisionar.sh"

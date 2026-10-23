@@ -20,6 +20,8 @@ x-n8n-env: &n8n-env
   N8N_DIAGNOSTICS_ENABLED: "false"
   N8N_PERSONALIZATION_ENABLED: "false"
   N8N_VERSION_NOTIFICATIONS_ENABLED: "false"
+  # Numa VM pequena (Oracle E2.1.Micro) o task runner dos nós Code leva mais de 30 s para subir.
+  N8N_RUNNERS_GRANT_TOKEN_TTL: "120"
   N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
   N8N_WEBHOOK_URL: ${N8N_WEBHOOK_URL:-http://localhost:5678/}
   NEXT_API_URL: ${NEXT_API_URL:-http://host.docker.internal:3000}

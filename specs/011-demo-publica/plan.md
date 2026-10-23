@@ -46,6 +46,11 @@ docs/roteiro-demo.md                 # roteiro para quem apresenta
 - **Chat próprio em vez do `@n8n/chat`** (Histórico da spec). Componentes shadcn com os tokens do tema seguem o switch claro/escuro sem CSS extra. O `formatarMensagem` interpreta a formatação do WhatsApp (`*negrito*`, `_itálico_`), que é a que o prompt manda o bot usar, e nunca injeta HTML.
 - **Sessão:** um `sessionId` (`crypto.randomUUID()`) é gerado no primeiro envio, e não durante o render, porque o prerender do Cache Components rejeita valores aleatórios. O Chat Teste vira `telefone = teste:<sessionId>`, e o pedido aparece com o selo TESTE.
 - **pnpm 11 na Vercel:** `ENABLE_EXPERIMENTAL_COREPACK=1` faz a Vercel usar a versão do `packageManager`. O build roda na Vercel (Linux), o que instala o binário nativo certo do libSQL. Por isso não usamos `--prebuilt`.
+- **Funções da Vercel em São Paulo (`gru1`, no `vercel.json`).** O banco do Turso foi criado em `aws-sa-east-1` e a VM está na Oracle São Paulo. No padrão (`iad1`, EUA), cada consulta cruzaria o continente. O Hobby permite escolher uma região.
+- **VM pequena:** a Oracle entregou a `E2.1.Micro` (1 GB de RAM e disco lento). Para caber nela:
+  - o `vm-provisionar.sh` cria 2 GB de swap;
+  - `N8N_RUNNERS_GRANT_TOKEN_TTL=120`, porque o task runner dos nós Code levava mais que os 30 s padrão para subir;
+  - o SSH do deploy usa `ServerAliveInterval`, porque o bootstrap fica muito tempo sem saída e a conexão ociosa caía.
 - **Docker na VM** vem dos pacotes do Ubuntu (`docker.io` e `docker-compose-v2`), sem baixar e executar script remoto.
 - **iptables na Oracle:** a imagem Ubuntu tem uma regra `REJECT` no fim da chain `INPUT`. As regras de 80/443 entram **antes** dela (`-I INPUT 6`) e são persistidas com `netfilter-persistent save`.
 

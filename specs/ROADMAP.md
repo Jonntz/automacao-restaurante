@@ -24,7 +24,7 @@ Legenda: ⬜ não iniciada · 🟨 em andamento · ✅ concluída · ⛔ bloquea
 | 002 | [cardapio-e-pedidos](002-cardapio-e-pedidos/tasks.md) | ✅ | 27/27 | |
 | 003 | [pagamento-pix](003-pagamento-pix/tasks.md) | ✅ | 19/19 | AbacatePay v2 testado com fetch falso; chave real pendente |
 | 004 | [api-do-bot](004-api-do-bot/tasks.md) | ✅ | 13/13 | Verificado com curl contra o dev server |
-| 005 | [painel-admin](005-painel-admin/tasks.md) | ✅ | 24/24 | `pnpm e2e:admin` verde; 3 defeitos de UI corrigidos |
+| 005 | [painel-admin](005-painel-admin/tasks.md) | ✅ | 25/25 | `pnpm e2e:admin` verde; 3 defeitos de UI corrigidos |
 | 006 | [n8n-infra](006-n8n-infra/tasks.md) | 🟨 | 10/11 | Verificada em Docker (Postgres 17, n8n 2.43.4); falta T006.07 (ngrok), que precisa de `NGROK_*` |
 | 007 | [agente-ia](007-agente-ia/tasks.md) | ✅ | 11/11 | CA-05…CA-12 ao vivo; Flash-Lite como principal + reserva (cota por modelo) |
 | 008 | [whatsapp](008-whatsapp/tasks.md) | 🟨 | 14/15 | Gateway → n8n → agente verificado; falta T008.15 (celular real), que precisa do app Meta + ngrok |
@@ -32,7 +32,7 @@ Legenda: ⬜ não iniciada · 🟨 em andamento · ✅ concluída · ⛔ bloquea
 | 010 | [marca-e-pizzaria](010-marca-e-pizzaria/tasks.md) | ✅ | 13/13 | Tema claro/escuro com switch, Chat Teste com a marca, seed de pizzaria com meio a meio |
 | 011 | [demo-publica](011-demo-publica/tasks.md) | 🟨 | 8/13 | Chat web + proxy + Caddy prontos e testados; o deploy espera as contas Turso, Vercel e Oracle |
 
-**Total:** 170/177 tarefas. As restantes dependem de contas externas: ngrok e app Meta (006/008); Turso, Vercel e Oracle (011).
+**Total:** 171/178 tarefas. As restantes dependem de contas externas: ngrok e app Meta (006/008); Turso, Vercel e Oracle (011).
 
 ## Credenciais externas (o usuário providencia)
 
