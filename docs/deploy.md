@@ -76,12 +76,26 @@ SMOKE_CHAT_URL=$APP/api/chat APP_URL=$APP BOT_API_KEY=<da demo> pnpm smoke   # p
 ```
 Por fim, entre em `$APP/admin` com o `ADMIN_EMAIL` e a `ADMIN_PASSWORD` da demo e confira o pedido do smoke em "Aguardando pagamento".
 
+## Antes de cada apresentação
+```bash
+pnpm demo:limpar          # mostra quantos pedidos há (não muda nada)
+pnpm demo:limpar --sim    # apaga pedidos, pagamentos e clientes; reabre a loja; religa os itens
+```
+O cardápio fica como está, e a numeração volta para #0001. Depois, mande um "oi" pelo `/chat` para "acordar" o n8n.
+
 ## Atualizar a demo
 | Mudou… | Rode |
 |---|---|
 | Código do Next.js | `vercel deploy --prod` |
 | Workflow, prompt ou `docker-compose.yml` | `pnpm demo:vm` |
 | Variável do painel | `pnpm demo:vercel-env <VAR> && vercel deploy --prod` |
+
+Na VM `E2.1.Micro` (1 GB de RAM e CPU fraca), medido em 2026-10-23:
+- o `pnpm demo:vm` leva cerca de 20 min na primeira vez e alguns minutos nas seguintes;
+- depois de um restart, o n8n leva cerca de 3 min para aceitar mensagens;
+- com a VM ociosa, cada resposta do atendente leva de 3 a 5 s; logo depois de um deploy, pode passar de 10 s.
+
+Uma VM Ampere (`A1.Flex`), quando houver capacidade, fica bem mais rápida. Para migrar, troque `VM_IP`/`N8N_DOMINIO`, rode `pnpm demo:vm` e depois `pnpm demo:vercel-env N8N_URL && vercel deploy --prod`.
 | Cardápio | Pelo painel (`/admin/cardapio`), ou `pnpm demo:db`, que é idempotente e não apaga nada |
 
 ## Editor do n8n na VM

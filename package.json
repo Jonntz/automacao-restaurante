@@ -25,6 +25,7 @@
     "n8n:export": "tsx scripts/n8n-export.ts",
     "smoke": "tsx scripts/smoke-chat.ts",
     "demo:db": "tsx --env-file=.env.demo.local scripts/db-migrar.ts && tsx --env-file=.env.demo.local scripts/db-seed.ts",
+    "demo:limpar": "tsx --env-file=.env.demo.local scripts/demo-limpar.ts",
     "demo:vm": "bash scripts/vm-deploy.sh",
     "demo:vercel-env": "bash scripts/demo-vercel-env.sh",
     "env:init": "tsx scripts/env-init.ts"

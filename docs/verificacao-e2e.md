@@ -131,3 +131,23 @@ curl -s -X POST localhost:3000/api/webhooks/whatsapp -H "x-hub-signature-256: $A
 | CA-06 | Chat Teste com logo, título e cores da marca | ✅ | Cabeçalho carvão com emblema, "CONTAINER LANCHES" em Anton com gradiente e filete laranja; corpo claro ou escuro conforme o sistema |
 | CA-07 | Trocar o seed demo não quebra os testes de domínio | ✅ | Suíte inteira verde depois da troca (cardápio de teste fixo) |
 | RNF-01 | typecheck, lint, test (312), build, `e2e:admin` (15/15), `smoke` (pizza) | ✅ | |
+
+## 011 — Demonstração pública (Vercel + Turso + VM Oracle)
+
+Ambiente: <https://container-lanches.vercel.app> (funções em `gru1`), Turso `aws-sa-east-1`, n8n numa VM Oracle `E2.1.Micro` em `sa-saopaulo-1` atrás do Caddy.
+
+| CA | Cenário | Resultado | Observação |
+|---|---|---|---|
+| CA-01…04 | Proxy `/api/chat`: repasse com segredo, validação, falha amigável, `loadPreviousSession` | ✅ | `tests/chat/proxy.test.ts` (17 casos) |
+| CA-05 | `/chat` local: "oi" respondido, troca de tema, 390 px sem rolagem | ✅ 2026-10-22 | `pnpm e2e:chat` (com `E2E_PEDIDO=1`: Pix copiado) |
+| CA-05 | Mesmo roteiro no link público | ✅ 2026-10-23 | `E2E_BASE_URL=… E2E_PEDIDO=1 pnpm e2e:chat` |
+| CA-06 | Borda da VM: `/`, `/rest/*` e webhook sem segredo devolvem 404; com segredo, o agente responde | ✅ 2026-10-23 | Certificado Let's Encrypt emitido depois de liberar 80/443 na Security List |
+| CA-07 | Roteiro do apresentador no link público: meio a meio + borda (R$ 72,80), Pix, card com selo TESTE, simular, "já paguei?", avanço até concluir | ✅ 2026-10-23 | Script descartável com dois navegadores (chat + painel) |
+| CA-08 | `/admin` sem login redireciona para `/login`; `/api/bot/*` sem chave devolve 401 | ✅ 2026-10-23 | `curl` no link público |
+| CA-09 | `formatarMensagem`: negrito/itálico do WhatsApp, quebras, Pix, HTML literal | ✅ | `tests/chat/formatar.test.ts` |
+| CA-10 | `pnpm demo:limpar`: prévia não altera; `--sim` zera e o próximo pedido é #0001 | ✅ 2026-10-23 | |
+
+Defeitos achados durante a verificação e corrigidos:
+- **Polling do kanban em laço** (005, CA-13): ~2 req/s na Vercel e ~190 req/s localmente.
+- **`pnpm dev` travando 5 a 11 s após cada escrita** (001): resolvido com o banco local em WAL.
+- **Primeira chamada à Vercel caindo na versão anterior** durante a troca de deploy: é só transitório e não precisou de correção.

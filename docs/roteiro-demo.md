@@ -14,7 +14,7 @@ O **e-mail e a senha do painel** são enviados à parte. Não estão neste docum
 ## Antes de começar (5 minutos antes)
 1. Abra o **chat** e o **painel** lado a lado (duas janelas, ou duas telas).
 2. No painel, faça login e clique em **Ativar som**, para ouvir o aviso de pedido pago.
-3. No chat, mande "oi". Se o atendente responder, está tudo no ar. Recarregue a página do chat para começar a apresentação com a conversa limpa.
+3. No chat, mande "oi". Se o atendente responder, está tudo no ar. A primeira resposta do dia pode levar até 1 minuto, enquanto o servidor "acorda"; depois disso cada resposta leva de 3 a 10 segundos. Recarregue a página do chat para começar a apresentação com a conversa limpa.
 
 ## Roteiro sugerido (cerca de 10 minutos)
 
@@ -54,7 +54,8 @@ No **painel**, clique em **Iniciar preparo**, depois em **Pronto para retirada**
 | O atendente pede mais informações (nome, retirada ou entrega) | É normal; responda como um cliente responderia. |
 | O pedido não aparece no painel | Clique em **Atualizar**, no topo do quadro. |
 | O botão **Simular pagamento** não aparece | O Pix daquele pedido expirou (30 minutos). Faça um pedido novo. |
-| A resposta demora mais de 20 segundos | A IA gratuita às vezes fica lenta. Aguarde; o sistema tenta de novo sozinho. |
+| A resposta demora mais de 20 segundos | O servidor gratuito do atendente é pequeno e às vezes fica lento. Aguarde: o indicador "digitando" continua e o sistema tenta de novo sozinho. |
+| O quadro tem pedidos de testes anteriores | Peça ao Jonatas para zerar a demo antes da apresentação. Leva poucos segundos. |
 
 ## O que é demonstração e o que muda na versão real
 | Na demonstração | Na versão real |

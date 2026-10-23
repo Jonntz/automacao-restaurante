@@ -74,6 +74,12 @@ Padrões assumidos, que o usuário pode trocar:
   - O script `scripts/demo-vercel-env.sh` aplica as variáveis sem imprimir os valores.
 - **DEM-RF-09** — Turso: as migrations e o seed demo são aplicados da máquina local, com as variáveis do `.env.demo.local`.
 
+- **DEM-RF-11** — `pnpm demo:limpar` deixa o banco da demo pronto para uma nova apresentação:
+  - sem `--sim`, só mostra quantos pedidos, pagamentos e clientes existem (nada muda);
+  - com `--sim`, apaga pedidos, itens de pedido, pagamentos, clientes e eventos processados, e reinicia a numeração em #0001;
+  - também reabre a loja e marca todos os itens como disponíveis, desfazendo o passo 5 do roteiro;
+  - não toca no cardápio nem na configuração da loja.
+
 ## Requisitos não funcionais
 - **DEM-RNF-01** — Custo zero, dentro da Constituição IV: Vercel Hobby, Turso free, Oracle Always Free, Gemini free tier, sslip.io e Let's Encrypt.
 - **DEM-RNF-02** — Nenhum segredo no git, nos logs ou na saída dos scripts (Constituição V).
@@ -101,6 +107,8 @@ Padrões assumidos, que o usuário pode trocar:
   - "Simular pagamento" leva o pedido para "Pagos — novos";
   - os próximos status avançam normalmente.
 - **CA-08** — Dado o painel público sem login, então `/admin` redireciona para `/login`, e `/api/bot/*` sem api-key devolve 401.
+
+- **CA-10** — Dado o banco da demo com pedidos, quando rodo `pnpm demo:limpar` sem `--sim`, então nada muda. Com `--sim`, o painel fica vazio, a loja aberta, todos os itens disponíveis, e o próximo pedido é o #0001.
 
 ## Fora de escopo
 - Domínio próprio.
