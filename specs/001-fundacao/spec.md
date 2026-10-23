@@ -11,7 +11,7 @@ Montar a base do projeto: app Next.js, testes, banco libSQL com schema e seed de
 ## Requisitos funcionais
 - **FUN-RF-01** — Projeto Next.js 16 com App Router, TypeScript strict, código em `src/`, gerenciado por pnpm, Tailwind CSS 4 e shadcn/ui inicializado.
 - **FUN-RF-02** — Vitest configurado com o alias `@/` e um helper `criarDbTeste()`, que entrega um banco libSQL `:memory:` com as migrations aplicadas e um banco novo por chamada.
-- **FUN-RF-03** — Um único módulo de banco (`src/lib/db/client.ts`) cria a conexão a partir de `DATABASE_URL`, mais `DATABASE_AUTH_TOKEN` opcional. Aceita `file:`, `libsql://` e `:memory:`.
+- **FUN-RF-03** — Um único módulo de banco (`src/lib/db/client.ts`) cria a conexão a partir de `DATABASE_URL`, mais `DATABASE_AUTH_TOKEN` opcional. Aceita `file:`, `libsql://` e `:memory:`. Banco em arquivo (`file:`) roda em modo **WAL**.
 - **FUN-RF-04** — Schema Drizzle conforme [data-model.md](data-model.md), com migrations SQL versionadas em `drizzle/`.
 - **FUN-RF-05** — Seed **idempotente** do restaurante demo. Desde a feature 010 é a pizzaria **Container Lanches** (5 categorias, 20 itens); os testes de domínio usam um cardápio de teste fixo, separado (MRC-RF-08).
 - **FUN-RF-06** — `src/lib/env.ts` valida as variáveis com zod e falha cedo, com mensagem clara que lista as que faltam. Cada módulo valida só o que usa (`env.banco()`, `env.admin()`, …), para que os testes não exijam o `.env` completo.
@@ -63,3 +63,4 @@ CI/CD, Docker para o Next.js, i18n.
 ## Histórico
 - 2026-10-16 — versão inicial.
 - 2026-10-16 — Implementada. O Next foi fixado na 16.4.1 porque a 16.4.2, publicada há menos de 1 dia, foi barrada pela política `minimumReleaseAge` do pnpm 11. O projeto usa Cache Components, ligado por padrão no template (ver plan.md). O script `typecheck` roda `next typegen` antes do `tsc`, porque os tipos globais `LayoutProps`/`PageProps` são gerados.
+- 2026-10-22 — FUN-RF-03: o banco em arquivo passa a usar `journal_mode=WAL`. No modo padrão (`delete`), cada escrita cria e apaga `local.db-journal` na raiz do projeto, e o `pnpm dev` ficava 5 a 11 s sem responder às rotas com banco logo depois de cada pedido. Medido com `curl`; com WAL não se repetiu. Só afeta o ambiente local: o Turso não usa arquivo.

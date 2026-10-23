@@ -41,3 +41,21 @@ describe("criarDbTeste (FUN-RF-02, CA-03)", () => {
     ]);
   });
 });
+
+describe("criarDb com arquivo (FUN-RF-03)", () => {
+  it("liga o modo WAL em banco de arquivo", async () => {
+    const { mkdtempSync, rmSync } = await import("node:fs");
+    const { tmpdir } = await import("node:os");
+    const { join } = await import("node:path");
+    const { criarDb } = await import("@/lib/db/client");
+    const pasta = mkdtempSync(join(tmpdir(), "db-wal-"));
+    const { client } = await criarDb(`file:${join(pasta, "teste.db")}`);
+    try {
+      const { rows } = await client.execute("PRAGMA journal_mode");
+      expect(String(rows[0][0]).toLowerCase()).toBe("wal");
+    } finally {
+      client.close();
+      rmSync(pasta, { recursive: true, force: true });
+    }
+  });
+});

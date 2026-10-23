@@ -10,6 +10,9 @@ export async function criarDb(url: string, authToken?: string): Promise<{ db: Db
   const client = createClient({ url, authToken: authToken || undefined });
   // SQLite só aplica foreign keys com o pragma ligado por conexão.
   await client.execute("PRAGMA foreign_keys = ON");
+  // WAL fica gravado no arquivo. No modo "delete", cada escrita criava e apagava local.db-journal
+  // na raiz do projeto, e o `pnpm dev` travava 5 a 11 s depois de cada pedido (FUN-RF-03).
+  if (url.startsWith("file:")) await client.execute("PRAGMA journal_mode = WAL");
   return { db: drizzle(client, { schema }), client };
 }
 
