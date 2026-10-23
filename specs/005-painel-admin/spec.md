@@ -87,6 +87,7 @@ Dar ao restaurante uma tela para acompanhar e mover os pedidos em tempo quase re
 - **CA-12** — Dado o kanban:
   - em 1920×1080 e 1280×800, as 5 colunas têm a mesma largura e juntas ocupam toda a largura útil (sem sobra à direita), vão até o fim da janela, a página não rola na vertical, e nenhum card fica espremido (a lista de cards rola);
   - em 390 px, cada coluna tem ~88% da largura da tela.
+- **CA-13** — Dado o kanban aberto e parado por 12 s (com o som desligado e depois ligado), então ele faz no máximo 4 requisições a `/api/admin/pedidos` (a inicial + uma a cada 5 s), e não uma a cada render.
 - **CA-11** — Dada uma categoria de nome longo (ex.: "Pizzas Tradicionais — Grande, 8 fatias"), quando edito um item em 1400 px ou 390 px, então nenhum campo do diálogo ultrapassa a caixa, e o nome da categoria é truncado com reticências.
 
 ## Fora de escopo
@@ -102,3 +103,4 @@ Vários usuários ou perfis, edição de configurações além do switch da loja
   Incluído o ADM-RNF-04 (E2E automatizado), porque o usuário pediu explicitamente uma PoC testável.
 - 2026-10-22 — Defeito relatado pelo usuário: com os nomes longos de categoria da pizzaria, o seletor de categoria do diálogo "Editar item" ultrapassava a caixa. A causa era a célula de grid sem `min-w-0` mais o `whitespace-nowrap` do SelectTrigger. Incluído o CA-11, verificado no `e2e:admin`.
 - 2026-10-22 — Pedido do usuário: as colunas do kanban devem ocupar 100% da tela de forma responsiva. Antes, as colunas tinham largura fixa (288 px), sobrava espaço à direita em telas largas e o cabeçalho ficava limitado a 1600 px. Incluídos o layout responsivo no ADM-RF-06 e o CA-12.
+- 2026-10-22 — Defeito achado na demo pública (011): o kanban pedia `/api/admin/pedidos` cerca de 2 vezes por segundo, em vez de a cada 5 s. O `useBipe` devolvia um objeto novo a cada render; isso recriava o `recarregar` e reiniciava o efeito do polling, que busca na hora. Na Vercel, isso multiplicava as invocações e as leituras do Turso. Incluído o CA-13.

@@ -11,6 +11,10 @@ const BASE = env.APP_URL ?? "http://localhost:3000";
 const PASTA = path.resolve(".e2e");
 fs.mkdirSync(PASTA, { recursive: true });
 
+// Pedido criado pela API só aparece no próximo poll (5 s, ADM-RF-07). No ambiente local, o banco em
+// arquivo ainda pode atrasar ~5 s a primeira consulta depois de uma escrita (pendência em docs/troubleshooting.md).
+const ESPERA_POLLING_MS = 10_000;
+
 const resultados = [];
 let falhas = 0;
 const ok = (ca, descricao) => resultados.push(`✅ ${ca} ${descricao}`);
@@ -68,7 +72,7 @@ try {
   });
   if (r.status !== 201) throw new Error(`bot respondeu ${r.status}: ${JSON.stringify(r.corpo)}`);
   numero = r.corpo.pedido.numero;
-  await card("Aguardando pagamento", numero).waitFor({ timeout: 8000 });
+  await card("Aguardando pagamento", numero).waitFor({ timeout: ESPERA_POLLING_MS });
   ok("CA-04", `pedido ${numero} apareceu em "Aguardando pagamento" sem recarregar`);
 } catch (e) {
   falha("CA-04", "polling", e);
@@ -107,7 +111,7 @@ try {
 try {
   const r = await bot("/pedidos", { telefone, itens: [{ itemId: 10, quantidade: 1 }], tipoEntrega: "retirada" }); // Chocolate com Morango
   const n = r.corpo.pedido.numero;
-  await card("Aguardando pagamento", n).getByRole("button", { name: "Cancelar" }).click({ timeout: 8000 });
+  await card("Aguardando pagamento", n).getByRole("button", { name: "Cancelar" }).click({ timeout: ESPERA_POLLING_MS });
   await page.getByRole("alertdialog").getByRole("button", { name: "Cancelar pedido" }).click();
   await card("Concluídos hoje", n).waitFor({ timeout: 8000 });
   ok("ADM-RF-10", `cancelar ${n} com diálogo leva para "Concluídos hoje"`);
@@ -267,6 +271,29 @@ try {
   falha("CA-12", "kanban @390px", e);
 }
 await page.setViewportSize({ width: 1400, height: 900 });
+
+// CA-13 (005): polling estável, no máximo 1 requisição a cada 5 s (com o som desligado e ligado)
+async function contarPolling(ms) {
+  let n = 0;
+  const contar = (r) => r.url().includes("/api/admin/pedidos") && n++;
+  page.on("request", contar);
+  await page.waitForTimeout(ms);
+  page.off("request", contar);
+  return n;
+}
+try {
+  await page.goto(`${BASE}/admin/pedidos`);
+  await page.getByText(/Atualizado há/).waitFor({ timeout: 15000 });
+  const desligado = await contarPolling(12_000);
+  await page.getByRole("button", { name: "Ativar som" }).click();
+  const ligado = await contarPolling(12_000);
+  if (desligado > 3 || ligado > 4) {
+    throw new Error(`${desligado} requisições em 12 s com o som desligado e ${ligado} com ele ligado (esperado ≤ 3 e ≤ 4)`);
+  }
+  ok("CA-13", `polling estável: ${desligado} e ${ligado} requisições em 12 s (som desligado/ligado)`);
+} catch (e) {
+  falha("CA-13", "polling", e);
+}
 
 try {
   await dialogoDeItemCabe("1400");

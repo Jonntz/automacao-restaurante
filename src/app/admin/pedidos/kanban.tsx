@@ -26,6 +26,7 @@ export function Kanban() {
   const [aberto, setAberto] = useState<number | null>(null);
   const pagosAnteriores = useRef<Set<number> | null>(null);
   const bipe = useBipe();
+  const tocarBipe = bipe.tocar; // estável: depender do objeto `bipe` reiniciaria o polling ao ligar o som
   const router = useRouter();
 
   const recarregar = useCallback(async () => {
@@ -44,7 +45,7 @@ export function Kanban() {
         if (chegaram.length) {
           const ate = Date.now() + DESTAQUE_MS;
           setDestaques((d) => new Map([...d, ...chegaram.map((id) => [id, ate] as const)]));
-          bipe.tocar();
+          tocarBipe();
         }
       }
       pagosAnteriores.current = pagos;
@@ -55,7 +56,7 @@ export function Kanban() {
     } catch (e) {
       setErro(`Falha ao atualizar (${(e as Error).message}). Tentando de novo…`);
     }
-  }, [bipe, router]);
+  }, [tocarBipe, router]);
 
   // Polling a cada 5 s, pausado com a aba oculta (ADM-RF-07).
   useEffect(() => {
